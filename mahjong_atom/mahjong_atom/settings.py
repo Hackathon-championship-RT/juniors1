@@ -98,7 +98,7 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_URL = "/auth/logout/"
 LOGOUT_REDIRECT_URL = "/"
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ru"
 
 TIME_ZONE = "UTC"
 

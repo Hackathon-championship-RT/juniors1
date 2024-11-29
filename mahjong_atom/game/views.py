@@ -63,16 +63,19 @@ def save_results(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         time_in_seconds = data.get('time')  # Получаем время в секундах
+        count_shuffled = data.get("count_shuffled")
 
         user = request.user
         if user.is_authenticated:
             GameResult.objects.create(
                 user=user,
                 time=time_in_seconds,
+                count_shuffled=count_shuffled,
             )
         else:
             GameResult.objects.create(
                 time=time_in_seconds,
+                count_shuffled=count_shuffled,
             )
 
         return JsonResponse({'status': 'success'})

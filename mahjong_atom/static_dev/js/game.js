@@ -2,13 +2,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameBoard = document.getElementById('game-board');
     const shuffleButton = document.getElementById('shuffle-button');
     const saveButton = document.getElementById('save-button');
-    const scoreElement = document.getElementById('score');
+    const cardsCountElement = document.getElementById('cards-count');
     const timerElement = document.getElementById('timer');
     let selectedTiles = [];
-    let score = 0;
     let startTime = null;
     let timerInterval = null;
+    let count_shuffled = 0;
 
+    // Функция обновления количества оставшихся карточек
+    function updateRemainingCards() {
+        const visibleTiles = Array.from(document.querySelectorAll('.tile:not(.matched)'));
+        cardsCountElement.textContent = visibleTiles.length; // Обновляем текст с количеством
+    }
+
+    updateRemainingCards();
     // Получение CSRF-токена
     function getCookie(name) {
         let cookieValue = null;
@@ -67,6 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
             value: tile.dataset.value // Значение плитки
         }));
 
+        count_shuffled++;
         // Отправляем запрос на сервер для перемешивания
         fetch('/game/shuffle_tiles/', {
             method: 'POST',
@@ -131,9 +139,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tile1.dataset.value === tile2.dataset.value) {
             tile1.classList.add('matched');
             tile2.classList.add('matched');
-            score += 10;
 
-            scoreElement.textContent = score;
+            updateRemainingCards();
             checkGameEnd();
         } else {
             tile1.classList.remove('selected');
@@ -158,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch('/save_results/', {
             method: 'POST',
             headers: { 'X-CSRFToken': getCookie('csrftoken') },
-            body: JSON.stringify({ name: playerName, score: score, time: `${minutes}:${seconds}` })
+            body: JSON.stringify({ name: playerName, count_shuffled: count_shuffled, time: `${minutes}:${seconds}` })
         })
         .then(response => response.json())
         .then(data => {
@@ -183,7 +190,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    time: elapsedTime  // Отправляем только время в секундах
+                    time: elapsedTime,
+                    count_shuffled: count_shuffled,
                 })
             })
             .then(response => response.json())

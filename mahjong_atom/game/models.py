@@ -19,7 +19,13 @@ class GameResult(models.Model):
         verbose_name="дата создания",
         auto_now_add=True,
     )
+    count_shuffled = models.IntegerField(
+        verbose_name="количество перешивание",
+    )
 
+    class Meta:
+        verbose_name = "результат"
+        verbose_name_plural = "результаты"
 
 class Tile(models.Model):
     name = models.CharField(max_length=100)
