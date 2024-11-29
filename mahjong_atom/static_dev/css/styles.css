@@ -1,8 +1,27 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+main {
+    flex-grow: 1;
+}
+
+footer {
+    margin-top: auto;
+    padding: 10px 0;
+    background: #343a40;
+    color: white;
+    text-align: center;
+}
+
 #game-board {
     display: flex;
     flex-wrap: wrap;
     max-width: 400px;
-    margin: 0 auto;
+    margin: 0 300px;
     position: relative;
 }
 
@@ -11,6 +30,12 @@
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+}
+
+#timer {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
 }
 
 .tile {
@@ -25,13 +50,24 @@
     cursor: pointer;
     z-index: 10;
 }
+.tile_pass {
+    width: 60px;
+    height: 80px;
+    border: 1px solid #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: -1;
+}
 
 .tile.selected {
     background: yellow;
 }
 
 .tile.matched {
-    visibility: hidden; /* Скрыть плитку, но оставить её в потоке документа */
+    visibility: hidden;
     z-index: -1;
 }
 

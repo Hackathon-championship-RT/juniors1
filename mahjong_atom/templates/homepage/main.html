@@ -1,17 +1,49 @@
 {% extends "base.html" %}
 
-{% load static %}
 {% block title %}Главная{% endblock %}
+{% load static %}
 
 {% block content %}
-  <div class="container">
-    <h2>Список товаров</h2>
-    <div class="card-group">
-      {% for item in items %}
-        {% include "includes/item_card.html" with item=item %}
-      {% empty %}
-        <p>Список пуст</p>
-      {% endfor %}
+<div class="text-center">
+  <h1 class="display-4 text-dark">Добро пожаловать в Маджонг Авто!</h1>
+  <p class="lead">Игра, где вы можете проверить свои знания автомобильных брендов.</p>
+  <div class="my-4">
+    <a href="{% url 'game:game_board' %}" class="btn btn-success btn-lg me-2">
+      <i class="bi bi-controller"></i> Начать игру
+    </a>
+    <a href="{% url 'game:check_match' %}" class="btn btn-primary btn-lg">
+      <i class="bi bi-question-circle"></i> Правила игры
+    </a>
+  </div>
+</div>
+<div class="row mt-5">
+  <div class="col-md-4">
+    <div class="card">
+      <img src="{% static 'img/brands.png' %}" class="card-img-top" alt="Автомобильные бренды">
+      <div class="card-body">
+        <h5 class="card-title">Узнайте бренды</h5>
+        <p class="card-text">Играйте, чтобы проверить, как хорошо вы знаете автомобильные компании!</p>
+      </div>
     </div>
   </div>
+  <div class="col-md-4">
+    <div class="card">
+      <img src="{% static 'img/mahjong.png' %}" class="card-img-top" alt="Маджонг">
+      <div class="card-body">
+        <h5 class="card-title">О Маджонге</h5>
+        <p class="card-text">Маджонг — это традиционная китайская игра с использованием костей для всех возрастов. Проверьте свою память и скорость!
+        На нашем сайте вы сможете поиграть в вариацию этой игры с автомобильными брендами.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card">
+      <img src="{% static 'img/champion.png' %}" class="card-img-top" alt="Победители">
+      <div class="card-body">
+        <h5 class="card-title">Станьте чемпионом</h5>
+        <p class="card-text">Соревнуйтесь с друзьями и достигайте новых высот!</p>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

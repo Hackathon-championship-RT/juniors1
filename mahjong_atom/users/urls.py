@@ -7,9 +7,7 @@ app_name = "users"
 urlpatterns = [
     django.urls.path(
         "login/",
-        views.LoginView.as_view(
-            template_name="users/login.html",
-        ),
+        users.views.CustomLoginView.as_view(),
         name="login",
     ),
     django.urls.path(

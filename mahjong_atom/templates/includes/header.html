@@ -1,32 +1,19 @@
 {% load static %}
-{% load active_link_tags %}
-<header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-  <div class="container">
-    <nav>
-      {% with request.resolver_match.view_name as view_name %}
-        <a href="/">
-          <img src='{% static "/img/favicon.ico" %}' alt="" height="40">
-        </a>
-        <nav style="float:right">
-          <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a href="{% url 'homepage:main' %}"
-               class="nav-link {% if view_name == 'homepage:main' %}active{% endif %}">Главная</a>
-            <a href="{% url 'game:game_board' %}"
-               class="nav-link {% if view_name == 'game:game_board' %}active{% endif %}">Старт игры</a>
-            <a href="{% url 'game:check_match' %}"
-               class="nav-link {% if view_name == 'game:check_match' %}active{% endif %}">Правила</a>
-            {% if user.is_authenticated %}
-              <a href="{% url 'users:logout' %}"
-                 class="nav-link {% if view_name == 'users:logout' %}active{% endif %}"
-                 style="float: left">Выйти</a>
-            {% else %}
-              <a href="{% url 'users:login' %}"
-                 class="nav-link {% if view_name == 'users:login' %}active{% endif %}"
-                 style="float: left">Войти</a>
-            {% endif %}
-          </div>
-        </nav>
-      {% endwith %}
+<header class="bg-dark text-white shadow py-3">
+  <div class="container d-flex flex-wrap align-items-center justify-content-between">
+    <a href="/" class="text-decoration-none text-white d-flex align-items-center">
+      <img src="{% static 'img/logo.svg' %}" alt="Логотип" height="50" class="me-2">
+      <span class="fs-4">Маджонг Авто</span>
+    </a>
+    <nav class="nav nav-pills">
+      <a href="{% url 'homepage:main' %}" class="nav-link {% if view_name == 'homepage:main' %}active{% endif %}">Главная</a>
+      <a href="{% url 'game:game_board' %}" class="nav-link {% if view_name == 'game:game_board' %}active{% endif %}">Игра</a>
+      <a href="{% url 'game:check_match' %}" class="nav-link {% if view_name == 'game:check_match' %}active{% endif %}">Правила</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'users:logout' %}" class="nav-link">Выйти</a>
+      {% else %}
+        <a href="{% url 'users:login' %}" class="nav-link">Войти</a>
+      {% endif %}
     </nav>
   </div>
 </header>
