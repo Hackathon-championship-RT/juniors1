@@ -9,59 +9,85 @@ document.addEventListener('DOMContentLoaded', () => {
     let startTime = null;
     let timerInterval = null;
 
-    // Пример логотипов автомобильных брендов
-    const brands = ["Toyota", "BMW", "Ford", "Audi", "Honda", "Chevrolet", "Tesla", "Nissan", "Kia", "Hyundai"];
-
-    // Функция генерации игрового поля
-    function generateField() {
-        let tiles = [...brands, ...brands]; // Дублируем массив для парных плиток
-        tiles = shuffleArray(tiles); // Перемешиваем плитки
-
-        let layers = 3; // Количество слоев
-        let field = Array(layers).fill().map(() => []); // Массив для слоев
-
-        // Разделяем плитки на слои
-        tiles.forEach((tile, index) => {
-            let layerIndex = index % layers;
-            field[layerIndex].push(tile);
-        });
-
-        return field;
-    }
-
-    // Функция случайного перемешивания массива
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]]; // Меняем элементы местами
+    // Получение CSRF-токена
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
         }
-        return array;
+        return cookieValue;
     }
 
-    // Обновление игрового поля
-    function updateBoard(field) {
+    function updateBoard(shuffledTiles) {
         gameBoard.innerHTML = ''; // Очищаем игровое поле
 
-        field.forEach((layer, layerIndex) => {
+        shuffledTiles.forEach(layer => {
             const layerDiv = document.createElement('div');
-            layerDiv.classList.add('layer');
-            layerDiv.dataset.layer = layerIndex + 1; // Задаем номер слоя
+            layerDiv.classList.add('layer'); // Создаем div для слоя
 
-            layer.forEach((tileValue, index) => {
-                const tileDiv = document.createElement('div');
-                tileDiv.classList.add('tile');
-                tileDiv.dataset.value = tileValue;
-                tileDiv.textContent = tileValue;
-                tileDiv.style.top = `${Math.random() * 400}px`; // Случайная позиция по вертикали
-                tileDiv.style.left = `${Math.random() * 400}px`; // Случайная позиция по горизонтали
-                tileDiv.dataset.layer = layerIndex + 1;
+            layer.forEach(tile => {
+                if (tile === "") {
+                    // Пустая плитка
+                    const emptyTileDiv = document.createElement('div');
+                    emptyTileDiv.classList.add('tile_pass');
+                    layerDiv.appendChild(emptyTileDiv);
+                } else {
+                    // Плитка с данными
+                    const tileDiv = document.createElement('div');
+                    tileDiv.classList.add('tile');
+                    tileDiv.dataset.value = tile;
+                    const tileImg = document.createElement('img');
+                    tileImg.src = tile[1]; // URL изображения
+                    tileImg.alt = tile[0]; // Название плитки
+                    tileImg.width = 80; // Ширина изображения
+                    tileImg.height = 60; // Высота изображения
 
-                layerDiv.appendChild(tileDiv);
+                    tileDiv.appendChild(tileImg);
+                    layerDiv.appendChild(tileDiv);
+                }
             });
 
             gameBoard.appendChild(layerDiv);
         });
     }
+
+    shuffleButton.addEventListener('click', () => {
+        // Получаем текущие плитки с поля
+        const tiles = Array.from(document.querySelectorAll('.tile'))
+        .filter(tile => tile.style.visibility !== 'hidden' && tile.style.display !== 'none' && !tile.classList.contains('matched'))
+        .map(tile => ({
+            id: tile.dataset.id, // Уникальный идентификатор плитки
+            value: tile.dataset.value // Значение плитки
+        }));
+
+        // Отправляем запрос на сервер для перемешивания
+        fetch('/game/shuffle_tiles/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'), // Получение CSRF-токена
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ tiles })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Обновляем игровое поле с перемешанными плитками
+                updateBoard(data.shuffled_tiles);
+            } else {
+                console.error('Ошибка перемешивания:', data.message);
+            }
+        })
+        .catch(error => console.error('Ошибка:', error));
+    });
+
 
     // Функция запуска таймера
     function startTimer() {
@@ -141,21 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Получение CSRF-токена
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.startsWith(name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
     function checkGameEnd() {
         // Проверяем, остались ли плитки без класса 'matched'
         const unmatchedTiles = document.querySelectorAll('.tile:not(.matched)');
@@ -187,3 +198,4 @@ document.addEventListener('DOMContentLoaded', () => {
     const initialField = generateField();
     updateBoard(initialField);
 });
+

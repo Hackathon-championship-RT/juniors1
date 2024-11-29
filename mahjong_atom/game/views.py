@@ -1,3 +1,4 @@
+import ast
 import random
 import json
 
@@ -8,19 +9,12 @@ from game.models import Tile, GameResult
 
 
 # Конфигурация игрового поля (слои)
-def generate_field():
-    layers = 3
+def generate_field(brands):
+    layers = 10
     tiles_per_layer = 12  # Количество плиток на слой (уменьшите/увеличьте для сложности)
     total_tiles = layers * tiles_per_layer
 
     # Логотипы автомобильных брендов (можно заменить на реальные пути к изображениям)
-    tiles = Tile.objects.all()
-    brands = []
-    for tile in tiles:
-        if tile.image:
-            brands.append([tile.name, tile.image.url])
-        else:
-            brands.append([tile.name, ""])
 
     # Создаем пары логотипов
     values = brands[:total_tiles // 2] * 2
@@ -42,7 +36,15 @@ def generate_field():
 
 # Отображение главной страницы
 def game_board(request):
-    field = generate_field()
+    tiles = Tile.objects.all()
+    brands = []
+    for tile in tiles:
+        if tile.image:
+            brands.append([tile.name, tile.image.url])
+        else:
+            brands.append([tile.name, ""])
+
+    field = generate_field(brands)
     return render(request, 'game/game.html', {'field': field})
 
 
@@ -74,3 +76,28 @@ def save_results(request):
             )
 
         return JsonResponse({'status': 'success'})
+
+
+def shuffle_tiles(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        tiles = data.get('tiles', [])
+
+        shuffled_set = set()
+        shuffled_tiles = tiles[:]
+        for shuffle_tile in shuffled_tiles:
+            if shuffle_tile["value"] == "undefined":
+                continue
+            if "[" not in shuffle_tile["value"]:
+                name, img = shuffle_tile["value"].split(",")
+            else:
+                name, img = ast.literal_eval(shuffle_tile["value"])
+            shuffled_set.add((name, img))
+        shuffled_tiles = [list(shuffled_tile) for shuffled_tile in shuffled_set]
+        shuffled_tiles = generate_field(shuffled_tiles)
+
+        return JsonResponse({
+            'status': 'success',
+            'shuffled_tiles': shuffled_tiles
+        })
+    return JsonResponse({'status': 'error', 'message': 'Неверный метод запроса'})
