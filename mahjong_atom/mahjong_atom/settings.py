@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "homepage.apps.HomepageConfig",
     'game.apps.GameConfig',
     "active_link",
+    "sorl.thumbnail",
     'rest_framework',
 ]
 

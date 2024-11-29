@@ -13,12 +13,19 @@
         {% for layer in field %}
             <div class="layer">
                 {% for tile in layer %}
-                    <div class="tile" data-value="{{ tile }}">{{ tile }}</div>
+                    {% if tile == "" %}
+                        <div class="tile_pass"></div>
+                    {% else %}
+                        <div class="tile" data-value="{{ tile.0 }}">
+                            <img src="{{ tile.1 }}" alt="{{ tile.0 }}" width="80px" height="60px">
+                        </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         {% endfor %}
     </div>
     <p>Score: <span id="score">0</span></p>
+    <div id="timer">Time: 0:00</div> <!-- Таймер -->
     <script src="{% static 'js/game.js' %}"></script>
 </body>
 </html>
