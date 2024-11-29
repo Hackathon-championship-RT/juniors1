@@ -8,6 +8,7 @@ urlpatterns = [
     path("", include("homepage.urls")),
     path("users/", include("users.urls")),
     path("admin/", django.contrib.admin.site.urls),
+    path('game/', include('game.urls')),
 ]
 
 urlpatterns += django.conf.urls.static.static(

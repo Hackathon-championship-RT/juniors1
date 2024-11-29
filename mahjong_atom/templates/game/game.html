@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahjong Game</title>
+    <link rel="stylesheet" href="{% static '/css/styles.css' %}">
+</head>
+<body>
+    <h1>Mahjong Game</h1>
+    <div id="game-board">
+        {% for layer in field %}
+            <div class="layer">
+                {% for tile in layer %}
+                    <div class="tile" data-value="{{ tile }}">{{ tile }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+    <button id="shuffle-button">Shuffle Tiles</button>
+    <p>Score: <span id="score">0</span></p>
+    <p><button id="save-button">Save Results</button></p>
+    <script src="{% static 'js/game.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Игра{% endblock %}
+
+{% block content %}
+<section>
+    <h2>Welcome to Mahjong Atom</h2>
+    <p>Match the tiles and clear the board. Can you beat the best score?</p>
+    <form action="{% url 'game:start_game' %}" method="post">
+        {% csrf_token %}
+        <label for="player_name">Your Name:</label>
+        <input type="text" id="player_name" name="player_name" required>
+        <button type="submit">Start Game</button>
+    </form>
+</section>
+{% endblock %}

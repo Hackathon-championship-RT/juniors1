@@ -11,6 +11,10 @@
           <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <a href="{% url 'homepage:main' %}"
                class="nav-link {% if view_name == 'homepage:main' %}active{% endif %}">Главная</a>
+            <a href="{% url 'game:game_board' %}"
+               class="nav-link {% if view_name == 'game:game_board' %}active{% endif %}">Старт игры</a>
+            <a href="{% url 'game:check_match' %}"
+               class="nav-link {% if view_name == 'game:check_match' %}active{% endif %}">Правила</a>
             {% if user.is_authenticated %}
               <a href="{% url 'users:logout' %}"
                  class="nav-link {% if view_name == 'users:logout' %}active{% endif %}"

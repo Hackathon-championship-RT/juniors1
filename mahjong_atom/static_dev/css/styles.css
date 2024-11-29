@@ -1,0 +1,39 @@
+#game-board {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 400px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.layer {
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tile {
+    width: 60px;
+    height: 80px;
+    background: lightblue;
+    border: 1px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.tile.selected {
+    background: yellow;
+}
+
+.tile.matched {
+    visibility: hidden;
+}
+
+button {
+    margin: 10px auto;
+    display: block;
+}
