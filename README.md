@@ -93,6 +93,6 @@ python3.8 -m venv venv
 ```
 
 ### Видеодемонстрация проекта
-[Скачать видеодемонстрацию проекта](https://github.com/Hackathon-championship-RT/juniors1/raw/main/Askly_video.mp4)
+[Скачать видеодемонстрацию проекта](https://github.com/Hackathon-championship-RT/juniors1/raw/main/mahjong_atom.mp4)
 
 ## Если у вас возникли проблемы с запуском проекта, свяжитесь с нами!
