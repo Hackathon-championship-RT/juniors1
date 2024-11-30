@@ -92,6 +92,9 @@ C:\path\to\python3.8\python.exe -m venv venv
 python3.8 -m venv venv
 ```
 
+### Развернутый сайт
+<a href="https://mario12508.pythonanywhere.com/">https://mario12508.pythonanywhere.com/</a>
+
 ### Видеодемонстрация проекта
 [Скачать видеодемонстрацию проекта](https://github.com/Hackathon-championship-RT/juniors1/raw/main/mahjong_atom.mp4)
 
