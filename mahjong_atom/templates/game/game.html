@@ -4,12 +4,19 @@
 {% load static %}
 
 {% block content %}
-    <h1>Mahjong Game</h1>
-    <button id="shuffle-button" class="btn btn-success btn-lg me-2"> Перемешать</button>
-    <button id="undo-button" class="btn btn-danger btn-lg me-2">Отмена хода</button>
-    <div id="message-container" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; background: rgba(0, 128, 0, 0.8); color: white; padding: 10px 20px; border-radius: 5px; display: none;">
-        Плитки соединены!
+<div class="game-container">
+    <div class="info-container">
+        <h3 id="timer">Время: 0:00</h3>
+        <div id="remaining-cards">
+            <h3>Осталось плиток: <span id="cards-count"></span></h3>
+        </div>
+        <button id="shuffle-button" class="btn btn-success btn-lg me-2">Перемешать</button>
+        <button id="undo-button" class="btn btn-danger btn-lg me-2">Отмена хода</button>
+        <div id="message-container" class="message-container">
+            Плитки соединены!
+        </div>
     </div>
+
     <div id="game-board" data-game-pk="{{ game.pk }}" data-game-lvl="{{ lvl }}" class="lvl-{{ lvl }}">
         {% for layer in field %}
             <div class="layer">
@@ -25,7 +32,7 @@
             </div>
         {% endfor %}
     </div>
-    <div id="remaining-cards"><h3>Осталось плиток: <span id="cards-count"></span></h3></div>
-    <h3 id="timer">Время: 0:00</h3>
-    <script src="{% static 'js/game.js' %}"></script>
+</div>
+
+<script src="{% static 'js/game.js' %}"></script>
 {% endblock %}

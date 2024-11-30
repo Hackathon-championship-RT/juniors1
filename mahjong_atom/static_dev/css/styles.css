@@ -1,3 +1,4 @@
+/* Общие стили */
 body {
     display: flex;
     flex-direction: column;
@@ -17,14 +18,99 @@ footer {
     text-align: center;
 }
 
+/* Новый стиль для игрового поля */
 #game-board {
     display: flex;
     flex-wrap: wrap;
-    max-width: 500px;
-    margin: 0 300px;
+    justify-content: center; /* Центрируем плитки */
+    gap: 10px; /* Добавляем промежутки между плитками */
+    width: 100%; /* Задаем ширину 100% */
     position: relative;
 }
 
+.tile {
+    width: 100px;
+    height: 100px;
+    background-color: aquamarine;
+    border-radius: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.3s linear;
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+    user-select: none;
+}
+
+.tile img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    pointer-events: none;
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+    user-select: none;
+}
+
+.game-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    gap: 30px;
+}
+
+.info-container {
+    flex: 1;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.game-board {
+    flex: 2;
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* Стиль для сообщений */
+.message-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 128, 0, 0.9);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 18px;
+    display: none;
+    z-index: 1000;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    transition: opacity 0.5s ease;
+    opacity: 1;
+    cursor: pointer;
+}
+
+.message-container.fade-out {
+    opacity: 0;
+}
+
+.message-container p {
+    margin: 0;
+    padding: 0;
+}
+
+/* Стиль для плиток */
 .layer {
     position: absolute;
     display: flex;
@@ -32,65 +118,10 @@ footer {
     gap: 10px;
 }
 
-.tile {
-    width: 100px;
-    height: 100px;
-    background: lightblue; /* Фон для карточек */
-    border: 1px solid #333;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    cursor: pointer;
-    z-index: 10;
-}
-
-/* Общий стиль для пустых плиток */
-.tile_pass {
-    border: 1px solid #FFFFFF;
-    z-index: -1;
-}
-
-/* Размеры для уровня сложности 1 (легкий) */
-.lvl-1 .tile,
-.lvl-1 .tile_pass {
-    width: 100px;
-    height: 100px;
-}
-
-.lvl-1 .tile img {
-    width: 90px;
-    height: 90px;
-}
-
-/* Размеры для уровня сложности 2 (средний) */
-.lvl-2 .tile,
-.lvl-2 .tile_pass {
-    width: 80px;
-    height: 80px;
-}
-
-.lvl-2 .tile img {
-    width: 70px;
-    height: 70px;
-}
-
-/* Размеры для уровня сложности 3 (сложный) */
-.lvl-3 .tile,
-.lvl-3 .tile_pass {
-    width: 60px;
-    height: 60px;
-}
-
-.lvl-3 .tile img {
-    width: 50px;
-    height: 50px;
-}
-
-
+/* Стиль для пустых плиток */
 .tile_pass {
     width: 100px;
-    height:100px;
+    height: 100px;
     border: 1px solid #FFFFFF;
     display: flex;
     align-items: center;
@@ -100,25 +131,61 @@ footer {
     z-index: -1;
 }
 
-.tile.selected {
-    background: yellow;
-}
-
+/* Стиль для совпавших плиток */
 .tile.matched {
-    visibility: hidden;
-    z-index: -1;    
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    z-index: 20;
 }
 
+/* Стиль для выбранных плиток */
+.tile.selected {
+    background-color: darkcyan;
+}
+
+@keyframes disappear {
+    0% {
+        transform: scale(1) translate(0, 0); /* Плитки на начальной позиции */
+        opacity: 1;
+    }
+    50% {
+        transform: scale(0.5) translate(-50px, 0); /* Перемещаем плитки друг к другу */
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(0) translate(0, 0); /* Плитки исчезают в центре */
+        opacity: 0;
+    }
+}
+
+/* Стили для кнопок (сохраняем старые стили) */
 button {
     margin: 10px auto;
     display: block;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
+button:hover {
+    background-color: #2ecc71;
+    transform: scale(1.05);
 }
 
+/* Кастомные стили для кнопок */
+.btn-custom {
+    background-color: #27ae60;
+    color: white;
+    border-radius: 5px;
+    padding: 10px 20px;
+    text-decoration: none;
+    transition: background-color 0.3s ease; /* Плавное изменение фона */
+}
+
+.btn-custom:hover {
+    background-color: #2ecc71; /* Плавное изменение фона на светлый зеленый */
+}
+
+/* Дополнительные стили для карточек, таблиц и других элементов */
 .custom-card {
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -183,16 +250,37 @@ button {
     font-size: 16px;
 }
 
-.btn-custom {
-    background-color: #27ae60;
-    color: white;
-    border-radius: 5px;
-    padding: 10px 20px;
-    text-decoration: none;
+.lvl-1 .tile,
+.lvl-1 .tile_pass {
+    width: 100px;
+    height: 100px;
 }
 
-.btn-custom:hover {
-    background-color: #2ecc71;
+.lvl-1 .tile img {
+    width: 90px;
+    height: 90px;
 }
 
+/* Размеры для уровня сложности 2 (средний) */
+.lvl-2 .tile,
+.lvl-2 .tile_pass {
+    width: 80px;
+    height: 80px;
+}
 
+.lvl-2 .tile img {
+    width: 70px;
+    height: 70px;
+}
+
+/* Размеры для уровня сложности 3 (сложный) */
+.lvl-3 .tile,
+.lvl-3 .tile_pass {
+    width: 60px;
+    height: 60px;
+}
+
+.lvl-3 .tile img {
+    width: 50px;
+    height: 50px;
+}
