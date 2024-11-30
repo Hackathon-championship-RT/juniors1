@@ -38,7 +38,11 @@
     </div>
   {% else %}
     <div class="alert alert-warning text-center">
-      <p>У вас нет сохраненных результатов. Играйте, чтобы они появились!</p>
+      {% if user.is_authenticated %}
+        <p>У вас нет сохраненных результатов. Играйте, чтобы они появились!</p>
+      {% else %}
+        <p>Вы должны авторизоваться, чтобы видеть личные результаты.</p>
+      {% endif %}
     </div>
   {% endif %}
   <div class="card mt-5 custom-card">

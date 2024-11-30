@@ -246,7 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const unmatchedTiles = document.querySelectorAll('.tile:not(.matched)');
         if (unmatchedTiles.length === 0) {
             stopTimer();
-
             fetch('/game/save_results/', {
                 method: 'POST',
                 headers: {

@@ -15,11 +15,11 @@ def generate_field(brands, lvl):
     layers = 100
     lvl = int(lvl)
     if lvl == 1:
-        tiles_per_layer = 12
+        tiles_per_layer = 16
     if lvl == 2:
-        tiles_per_layer = 25
+        tiles_per_layer = 30
     elif lvl == 3:
-        tiles_per_layer = 35
+        tiles_per_layer = 49
     total_tiles = layers * tiles_per_layer
 
     values = brands[:total_tiles // 2] * 2
@@ -104,50 +104,47 @@ class SaveResults(django.views.generic.View):
 def check_match(request):
     return render(request, 'game/check_match.html')
 
+
 class Leaderboard(django.views.generic.View):
     def get(self, request):
+        user_results = None
         if request.user.is_authenticated:
-            user_results = GameResult.objects.filter(user=request.user).order_by(
+            user_results = GameResult.objects.filter(
+                user=request.user).order_by(
                 '-created_at')
 
-            leader_results = (
-                GameResult.objects
-                .values('user', "game__name")
-                .annotate(
-                    best_time=Min('time'),
-                    best_count_shuffled=Min('count_shuffled'),
-                    best_result_date=Max('created_at'),
-                    last_time=Max('time'),
-                    last_count_shuffled=Max('count_shuffled'),
-                    last_result_date=Max('created_at'),
-                )
-                .order_by('best_time')
+        leader_results = (
+            GameResult.objects
+            .values('user', "game__name")
+            .annotate(
+                best_time=Min('time'),
+                best_count_shuffled=Min('count_shuffled'),
+                best_result_date=Max('created_at'),
+                last_time=Max('time'),
+                last_count_shuffled=Max('count_shuffled'),
+                last_result_date=Max('created_at'),
             )
-
-            leader_results = [
-                {
-                    'user': None if not entry['user'] else User.objects.get(id=entry['user']),
-                    'game': entry["game__name"],
-                    'best_time': entry['best_time'],
-                    'best_count_shuffled': entry['best_count_shuffled'],
-                    'best_result_date': entry['best_result_date'],
-                    'last_time': entry['last_time'],
-                    'last_count_shuffled': entry['last_count_shuffled'],
-                    'last_result_date': entry['last_result_date'],
-                }
-                for entry in leader_results
-            ]
-
-            return render(request, 'game/results.html', {
-                'user_results': user_results,
-                'leader_results': leader_results
-            })
-
-        messages.error(
-            request,
-            "Вы должны авторизоваться, чтобы видеть результаты."
+            .order_by('best_time')
         )
-        return redirect('homepage:main')
+
+        leader_results = [
+            {
+                'user': None if not entry['user'] else User.objects.get(
+                    id=entry['user']),
+                'game': entry["game__name"],
+                'best_time': entry['best_time'],
+                'best_count_shuffled': entry['best_count_shuffled'],
+                'best_result_date': entry['best_result_date'],
+                'last_time': entry['last_time'],
+                'last_count_shuffled': entry['last_count_shuffled'],
+                'last_result_date': entry['last_result_date'],
+            }
+            for entry in leader_results
+        ]
+        return render(request, 'game/results.html', {
+            'user_results': user_results,
+            'leader_results': leader_results
+        })
 
 
 class ShuffleTiles(django.views.generic.View):
