@@ -48,6 +48,12 @@ cd mahjong_atom
 python manage.py migrate
 ```
 
+#### Заполняем базу данных
+
+```commandline
+python manage.py loaddata fixtures/data.json
+```
+
 #### Запускаем сервер 
 
 ```commandline

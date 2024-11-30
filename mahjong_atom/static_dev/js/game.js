@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const timerElement = document.getElementById('timer');
     const undoButton = document.getElementById('undo-button');
     const gamePk = document.getElementById('game-board').getAttribute('data-game-pk');
+    const lvl = gameBoard.getAttribute('data-game-lvl');
+    gameBoard.classList.add(`lvl-${lvl}`);
     let selectedTiles = [];
     let startTime = null;
     let timerInterval = null;
@@ -13,8 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameStates = [];
 
     function saveGameState() {
-        const currentState = Array.from(document.querySelectorAll('.tile')).map(tile => ({
-            id: tile.dataset.id,
+        const currentState = Array.from(document.querySelectorAll('.tile')).map((tile, index) => ({
+            id: `${tile.id}-${index}`,
             value: tile.dataset.value,
             isMatched: tile.classList.contains('matched'),
             isSelected: tile.classList.contains('selected')
@@ -116,8 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
     shuffleButton.addEventListener('click', () => {
         const tiles = Array.from(document.querySelectorAll('.tile'))
         .filter(tile => tile.style.visibility !== 'hidden' && tile.style.display !== 'none' && !tile.classList.contains('matched'))
-        .map(tile => ({
-            id: tile.dataset.id,
+        .map((tile, index) => ({
+            id: `${tile.id}-${index}`,
             value: tile.dataset.value
         }));
 
@@ -128,7 +130,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 'X-CSRFToken': getCookie('csrftoken'),
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ tiles })
+            body: JSON.stringify({
+            tiles: tiles,
+            lvl: lvl,
+            })
         })
         .then(response => response.json())
         .then(data => {

@@ -11,9 +11,15 @@ from django.shortcuts import render, redirect
 from game.models import GameResult, Game
 
 
-def generate_field(brands):
-    layers = 10
-    tiles_per_layer = 12
+def generate_field(brands, lvl):
+    layers = 100
+    lvl = int(lvl)
+    if lvl == 1:
+        tiles_per_layer = 12
+    if lvl == 2:
+        tiles_per_layer = 25
+    elif lvl == 3:
+        tiles_per_layer = 35
     total_tiles = layers * tiles_per_layer
 
     values = brands[:total_tiles // 2] * 2
@@ -38,23 +44,28 @@ class GameBoard(django.views.generic.ListView):
 
     def get_queryset(self):
         pk = self.kwargs.get('pk')
+        lvl = int(
+            self.kwargs.get('lvl', 1))  # Уровень сложности по умолчанию - 1
         game = django.shortcuts.get_object_or_404(Game, pk=pk)
         tiles = game.tiles.all()
-        brands = []
-        for tile in tiles:
-            if tile.image:
-                brands.append([tile.name, tile.image.url, tile.description])
-            else:
-                brands.append([tile.name, "", tile.description])
 
-        field = generate_field(brands)
+        brands = [
+            [tile.name, tile.image.url, tile.description] if tile.image else [
+                tile.name, "", tile.description]
+            for tile in tiles
+        ]
+
+        field = generate_field(brands * lvl, lvl)
+
         return field
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         pk = self.kwargs.get('pk')
+        lvl = self.kwargs.get('lvl')
         game = django.shortcuts.get_object_or_404(Game, pk=pk)
         context["game"] = game
+        context["lvl"] = lvl
         return context
 
 
@@ -145,8 +156,10 @@ class ShuffleTiles(django.views.generic.View):
     def post(self, request):
         data = json.loads(request.body)
         tiles = data.get('tiles', [])
+        lvl = data.get("lvl", 1)
 
-        shuffled_set = set()
+        shuffled_dict = {}
+        shuffled_list = list()
         shuffled_tiles = tiles[:]
         for shuffle_tile in shuffled_tiles:
             if shuffle_tile["value"] == "undefined":
@@ -157,10 +170,15 @@ class ShuffleTiles(django.views.generic.View):
             else:
                 name, img, description = ast.literal_eval(
                     shuffle_tile["value"])
-            shuffled_set.add((name, img, description))
+            if name in shuffled_dict and not shuffled_dict[name]:
+                shuffled_dict[name] = True
+            else:
+                shuffled_dict[name] = False
+                shuffled_list.append((name, img, description))
+
         shuffled_tiles = [list(shuffled_tile) for shuffled_tile in
-                          shuffled_set]
-        shuffled_tiles = generate_field(shuffled_tiles)
+                          shuffled_list]
+        shuffled_tiles = generate_field(shuffled_tiles, lvl)
 
         return JsonResponse({
             'status': 'success',
