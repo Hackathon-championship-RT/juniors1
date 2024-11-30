@@ -16,7 +16,7 @@ def generate_field(brands, lvl):
     if lvl == 1:
         tiles_per_layer = 16
     if lvl == 2:
-        tiles_per_layer = 30
+        tiles_per_layer = 25
     elif lvl == 3:
         tiles_per_layer = 49
     total_tiles = layers * tiles_per_layer
