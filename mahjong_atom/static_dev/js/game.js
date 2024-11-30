@@ -7,8 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const undoButton = document.getElementById('undo-button');
     const gamePk = document.getElementById('game-board').getAttribute('data-game-pk');
     let selectedTiles = [];
-    let startTime = null; // Время начала игры
-    let elapsedTimeBeforePause = 0; // Время, прошедшее до паузы
+    let seconds = 0;
     let timerInterval = null;
     let count_shuffled = 0;
     const gameStates = [];
@@ -27,38 +26,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Функция запуска таймера
     function startTimer() {
-        if (!startTime) {
-            startTime = Date.now() - elapsedTimeBeforePause * 1000; // Устанавливаем начальное время, включая прошедшее до паузы
-        }
         timerInterval = setInterval(() => {
-            const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-            const minutes = Math.floor(elapsedTime / 60);
-            const seconds = elapsedTime % 60;
-            timerElement.textContent = `Время: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            seconds++;
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            timerElement.textContent = `Время: ${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
         }, 1000);
     }
 
-    // Функция остановки таймера
     function stopTimer() {
-        clearInterval(timerInterval); // Останавливаем таймер
-        elapsedTimeBeforePause = Math.floor((Date.now() - startTime) / 1000); // Сохраняем прошедшее время
-        startTime = Date.now(); // Обновляем startTime, чтобы при возобновлении использовать текущее время
+        clearInterval(timerInterval);
     }
 
-    // Восстановление последнего состояния игры
     function restoreLastState() {
         if (lastMatchedTiles) {
             const { tile1, tile2 } = lastMatchedTiles;
-        
-            // Восстановление состояния плиток
+
             tile1.classList.remove('tile_pass', 'matched', 'selected');
             tile2.classList.remove('tile_pass', 'matched', 'selected');
-            
+
             tile1.style.opacity = '1';
             tile2.style.opacity = '1';
             tile1.style.transform = 'scale(1)';
             tile2.style.transform = 'scale(1)';
-        
+
             lastMatchedTiles = null;  // Очищаем последний шаг
             updateRemainingCards();
         }
@@ -89,20 +80,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Отображение сообщения
-    function showMessage(message, duration = 7000) {
+    function showMessage(message, duration = 99999999) {
         const messageContainer = document.getElementById('message-container');
         messageContainer.textContent = message;
         messageContainer.style.display = 'block';
-    
+
         stopTimer();  // Останавливаем таймер при отображении сообщения
-    
+
         // Добавляем обработчик клика на само сообщение
         messageContainer.addEventListener('click', function hideMessage() {
             messageContainer.style.display = 'none';
             startTimer();  // Возобновляем таймер
             messageContainer.removeEventListener('click', hideMessage); // Удаляем обработчик после первого клика
         });
-    
+
         // Убираем сообщение через некоторое время (если не было закрыто вручную)
         setTimeout(() => {
             if (messageContainer.style.display !== 'none') {
@@ -115,11 +106,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Обновление доски игры с перемешанными картами
     function updateBoard(shuffledTiles) {
         gameBoard.innerHTML = ''; // Очищаем доску
-    
+
         shuffledTiles.forEach(layer => {
             const layerDiv = document.createElement('div');
             layerDiv.classList.add('layer');
-    
+
             layer.forEach(tile => {
                 if (tile === "") {
                     const emptyTileDiv = document.createElement('div');
@@ -135,12 +126,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     tileImg.alt = tile[0];
                     tileImg.width = 80;
                     tileImg.height = 60;
-    
+
                     tileDiv.appendChild(tileImg);
                     layerDiv.appendChild(tileDiv);
                 }
             });
-    
+
             gameBoard.appendChild(layerDiv);
         });
     }
@@ -180,17 +171,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!tile || tile.classList.contains('matched')) {
             return; // Если плитка уже заматчена, не кликаем
         }
-    
+
         if (tile.classList.contains('selected')) {
             tile.classList.remove('selected'); // Убираем выделение, если оно уже есть
             selectedTiles = selectedTiles.filter(t => t !== tile); // Удаляем из списка выбранных
             return;
         }
-    
+
         if (selectedTiles.length < 2) {
             tile.classList.add('selected');
             selectedTiles.push(tile);
-    
+
             if (selectedTiles.length === 2) {
                 setTimeout(() => {
                     checkMatch(selectedTiles[0], selectedTiles[1]);
@@ -230,22 +221,19 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedTiles = [];
     }
 
-
     undoButton.addEventListener('click', () => {
         restoreLastState();
     });
 
-    // Обработчик для кнопки сохранения результата
     saveButton.addEventListener('click', () => {
         const playerName = prompt('Enter your name:');
-        const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
-        const minutes = Math.floor(elapsedTime / 60);
-        const seconds = elapsedTime % 60;
+        const minutes = Math.floor(seconds / 60);
+        const second = seconds % 60;
 
         fetch('/save_results/', {
             method: 'POST',
             headers: { 'X-CSRFToken': getCookie('csrftoken') },
-            body: JSON.stringify({ name: playerName, count_shuffled: count_shuffled, time: `${minutes}:${seconds}` })
+            body: JSON.stringify({ name: playerName, count_shuffled: count_shuffled, time: `${minutes}:${second}` })
         })
         .then(response => response.json())
         .then(data => {
@@ -254,13 +242,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Проверка на завершение игры
     function checkGameEnd() {
         const unmatchedTiles = document.querySelectorAll('.tile:not(.matched)');
         if (unmatchedTiles.length === 0) {
             stopTimer();
-
-            const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
 
             fetch('/game/save_results/', {
                 method: 'POST',
@@ -269,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    time: elapsedTime,
+                    time: seconds,
                     count_shuffled: count_shuffled,
                     game_pk: gamePk
                 })

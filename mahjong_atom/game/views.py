@@ -126,7 +126,7 @@ class Leaderboard(django.views.generic.View):
 
             leader_results = [
                 {
-                    'user': User.objects.get(id=entry['user']),
+                    'user': None if not entry['user'] else User.objects.get(id=entry['user']),
                     'game': entry["game__name"],
                     'best_time': entry['best_time'],
                     'best_count_shuffled': entry['best_count_shuffled'],
