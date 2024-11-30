@@ -4,10 +4,53 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveButton = document.getElementById('save-button');
     const cardsCountElement = document.getElementById('cards-count');
     const timerElement = document.getElementById('timer');
+    const undoButton = document.getElementById('undo-button');
     let selectedTiles = [];
     let startTime = null;
     let timerInterval = null;
     let count_shuffled = 0;
+    const gameStates = []; // Хранилище состояний игры
+
+    // Функция для создания копии текущего игрового состояния
+    function saveGameState() {
+        const currentState = Array.from(document.querySelectorAll('.tile')).map(tile => ({
+            id: tile.dataset.id,
+            value: tile.dataset.value,
+            isMatched: tile.classList.contains('matched'),
+            isSelected: tile.classList.contains('selected')
+        }));
+        gameStates.push(currentState);
+    }
+
+    // Функция для восстановления последнего состояния
+    function restoreLastState() {
+        if (gameStates.length > 0) {
+            const lastState = gameStates.pop(); // Достаем последнее сохраненное состояние
+
+            // Получаем все плитки
+            const tiles = Array.from(document.querySelectorAll('.tile'));
+
+            tiles.forEach((tile, index) => {
+                const state = lastState[index];
+
+                tile.className = 'tile';
+
+                if (state.isMatched) {
+                    tile.classList.add('matched'); // Плитка совпала
+                } else if (state.isSelected) {
+                    // Убираем selected при возврате
+                    tile.classList.remove('selected');
+                }
+
+                if (!state.isMatched && !state.isSelected) {
+                    tile.classList.remove('matched', 'selected');
+                }
+            });
+
+            // Очищаем массив выбранных плиток
+            selectedTiles = [];
+        }
+    }
 
     // Функция обновления количества оставшихся карточек
     function updateRemainingCards() {
@@ -31,6 +74,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return cookieValue;
     }
+
+    function showMessage(message, duration = 2000) {
+        const messageContainer = document.getElementById('message-container');
+        messageContainer.textContent = message;
+        messageContainer.style.display = 'block';
+
+        setTimeout(() => {
+            messageContainer.style.display = 'none';
+        }, duration); // Сообщение исчезнет через `duration` миллисекунд
+    }
+
 
     function updateBoard(shuffledTiles) {
         gameBoard.innerHTML = ''; // Очищаем игровое поле
@@ -136,9 +190,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Проверка совпадений
     function checkMatch(tile1, tile2) {
+        saveGameState();
         if (tile1.dataset.value === tile2.dataset.value) {
             tile1.classList.add('matched');
             tile2.classList.add('matched');
+
+            showMessage(tile1.dataset.modelName);
 
             updateRemainingCards();
             checkGameEnd();
@@ -153,9 +210,14 @@ document.addEventListener('DOMContentLoaded', () => {
     shuffleButton.addEventListener('click', () => {
         const field = generateField(); // Генерируем случайное поле
         updateBoard(field);
+        saveGameState();
     });
 
-    // Сохранение результатов
+    undoButton.addEventListener('click', () => {
+        restoreLastState();
+        updateRemainingCards();
+    });
+
     saveButton.addEventListener('click', () => {
         const playerName = prompt('Enter your name:');
         const elapsedTime = Math.floor((new Date() - startTime) / 1000);
@@ -201,7 +263,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
-
     // Запускаем игру
     const initialField = generateField();
     updateBoard(initialField);

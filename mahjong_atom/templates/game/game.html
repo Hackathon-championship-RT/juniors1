@@ -10,6 +10,10 @@
 <body>
     <h1>Mahjong Game</h1>
     <button id="shuffle-button">Перемешать</button>
+    <button id="undo-button">Undo Last Move</button>
+    <div id="message-container" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; background: rgba(0, 128, 0, 0.8); color: white; padding: 10px 20px; border-radius: 5px; display: none;">
+        Плитки соединены!
+    </div>
     <div id="game-board">
         {% for layer in field %}
             <div class="layer">
@@ -17,7 +21,7 @@
                     {% if tile == "" %}
                         <div class="tile_pass"></div>
                     {% else %}
-                        <div class="tile" data-value="{{ tile }}">
+                        <div class="tile" data-value="{{ tile }}" data-model-name="{{ tile.2 }}">
                             <img src="{{ tile.1 }}" alt="{{ tile.0 }}" width="80px" height="60px">
                         </div>
                     {% endif %}

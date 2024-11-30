@@ -40,9 +40,9 @@ def game_board(request):
     brands = []
     for tile in tiles:
         if tile.image:
-            brands.append([tile.name, tile.image.url])
+            brands.append([tile.name, tile.image.url, tile.description])
         else:
-            brands.append([tile.name, ""])
+            brands.append([tile.name, "", tile.description])
 
     field = generate_field(brands)
     return render(request, 'game/game.html', {'field': field})
@@ -92,10 +92,10 @@ def shuffle_tiles(request):
             if shuffle_tile["value"] == "undefined":
                 continue
             if "[" not in shuffle_tile["value"]:
-                name, img = shuffle_tile["value"].split(",")
+                name, img, description = shuffle_tile["value"].split(",")
             else:
-                name, img = ast.literal_eval(shuffle_tile["value"])
-            shuffled_set.add((name, img))
+                name, img, description = ast.literal_eval(shuffle_tile["value"])
+            shuffled_set.add((name, img, description))
         shuffled_tiles = [list(shuffled_tile) for shuffled_tile in shuffled_set]
         shuffled_tiles = generate_field(shuffled_tiles)
 

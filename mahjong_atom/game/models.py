@@ -28,7 +28,13 @@ class GameResult(models.Model):
         verbose_name_plural = "результаты"
 
 class Tile(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(
+        verbose_name="название",
+        max_length=100,
+    )
+    description = models.TextField(
+        verbose_name="описание",
+    )
     image = models.ImageField(
         verbose_name="фото",
         upload_to="uploads/tiles/",
