@@ -1,11 +1,12 @@
 {% extends "base.html" %}
+{% load i18n %}
 
-{% block title %}Уровни{% endblock %}
+{% block title %}{% trans "Уровни" %}{% endblock %}
 
 {% block content %}
 
 <section class="container py-5">
-  <h2 class="text-center mb-5">Игры</h2>
+  <h2 class="text-center mb-5">{% trans "Игры" %}</h2>
 
   <div class="row">
     {% for game in games %}
@@ -15,15 +16,15 @@
             <h4 class="card-title text-center">{{ game.name }}</h4>
 
             <div class="d-flex justify-content-around">
-              <a href="{% url 'game:game_board' pk=game.id lvl=1 %}" class="btn btn-success btn-lg w-100 mb-2">Легкая игра</a>
+              <a href="{% url 'game:game_board' pk=game.id lvl=1 %}" class="btn btn-success btn-lg w-100 mb-2">{% trans "Легкая игра" %}</a>
             </div>
 
             <div class="d-flex justify-content-around">
-              <a href="{% url 'game:game_board' pk=game.id lvl=2 %}" class="btn btn-warning btn-lg w-100 mb-2">Средняя игра</a>
+              <a href="{% url 'game:game_board' pk=game.id lvl=2 %}" class="btn btn-warning btn-lg w-100 mb-2">{% trans "Средняя игра" %}</a>
             </div>
 
             <div class="d-flex justify-content-around">
-              <a href="{% url 'game:game_board' pk=game.id lvl=3 %}" class="btn btn-danger btn-lg w-100 mb-2">Сложная игра</a>
+              <a href="{% url 'game:game_board' pk=game.id lvl=3 %}" class="btn btn-danger btn-lg w-100 mb-2">{% trans "Сложная игра" %}</a>
             </div>
           </div>
         </div>

@@ -1,51 +1,49 @@
 {% extends "base.html" %}
 
-{% block title %}Главная{% endblock %}
+{% load i18n %}
 {% load static %}
+{% block title %}{% trans "Главная" %}{% endblock %}
 
 {% block content %}
-
 <div class="text-center">
-  <h1 class="display-4 text-dark">Добро пожаловать в Маджонг Авто!</h1>
-  <p class="lead">Игра, где вы можете проверить свои знания автомобильных брендов.</p>
+  <h1 class="display-4 text-dark">{% trans "Добро пожаловать в Маджонг Авто!" %}</h1>
+  <p class="lead">{% trans "Игра, где вы можете проверить свои знания автомобильных брендов." %}</p>
   <div class="my-4">
     <a href="{% url 'game:games' %}" class="btn btn-success btn-lg me-2">
-      <i class="bi bi-controller"></i> Игры
+      <i class="bi bi-controller"></i> {% trans "Игры" %}
     </a>
     <a href="{% url 'game:rules' %}" class="btn btn-primary btn-lg">
-      <i class="bi bi-question-circle"></i> Правила игры
+      <i class="bi bi-question-circle"></i> {% trans "Правила игры" %}
     </a>
   </div>
 </div>
 <div class="row mt-5">
   <div class="col-md-4">
     <div class="card">
-      <img src="{% static 'img/brands.png' %}" class="card-img-top" alt="Автомобильные бренды">
+      <img src="{% static 'img/brands.png' %}" class="card-img-top" alt="{% trans 'Автомобильные бренды' %}">
       <div class="card-body">
-        <h5 class="card-title">Узнайте бренды</h5>
-        <p class="card-text">Играйте, чтобы проверить, как хорошо вы знаете автомобильные компании!</p>
+        <h5 class="card-title">{% trans "Узнайте бренды" %}</h5>
+        <p class="card-text">{% trans "Играйте, чтобы проверить, как хорошо вы знаете автомобильные компании!" %}</p>
       </div>
     </div>
   </div>
   <div class="col-md-4">
     <div class="card">
-      <img src="{% static 'img/mahjong.png' %}" class="card-img-top" alt="Маджонг">
+      <img src="{% static 'img/mahjong.png' %}" class="card-img-top" alt="{% trans 'Маджонг' %}">
       <div class="card-body">
-        <h5 class="card-title">О Маджонге</h5>
-        <p class="card-text">Маджонг — это традиционная китайская игра с использованием костей для всех возрастов. Проверьте свою память и скорость!
-        На нашем сайте вы сможете поиграть в вариацию этой игры с автомобильными брендами.</p>
+        <h5 class="card-title">{% trans "О Маджонге" %}</h5>
+        <p class="card-text">{% trans "Маджонг — это традиционная китайская игра с использованием костей для всех возрастов. Проверьте свою память и скорость! На нашем сайте вы сможете поиграть в вариацию этой игры с автомобильными брендами." %}</p>
       </div>
     </div>
   </div>
   <div class="col-md-4">
     <div class="card">
-      <img src="{% static 'img/champion.png' %}" class="card-img-top" alt="Победители">
+      <img src="{% static 'img/champion.png' %}" class="card-img-top" alt="{% trans 'Победители' %}">
       <div class="card-body">
-        <h5 class="card-title">Станьте чемпионом</h5>
-        <p class="card-text">Соревнуйтесь с друзьями и достигайте новых высот!</p>
+        <h5 class="card-title">{% trans "Станьте чемпионом" %}</h5>
+        <p class="card-text">{% trans "Соревнуйтесь с друзьями и достигайте новых высот!" %}</p>
       </div>
     </div>
   </div>
 </div>
-
 {% endblock %}

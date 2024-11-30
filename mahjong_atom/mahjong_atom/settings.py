@@ -3,6 +3,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from django.contrib.messages import constants as message_constants
+from django.utils.translation import gettext_lazy as _
 
 load_dotenv()
 
@@ -34,9 +35,11 @@ INSTALLED_APPS = [
     "active_link",
     "sorl.thumbnail",
     'rest_framework',
+
 ]
 
 MIDDLEWARE = [
+    'django.middleware.locale.LocaleMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -99,7 +102,14 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_URL = "/auth/logout/"
 LOGOUT_REDIRECT_URL = "/"
 
-LANGUAGE_CODE = "ru"
+LANGUAGES = [
+    ("en", _("Английский")),
+    ("ru", _("Русский")),
+]
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
 
 TIME_ZONE = "UTC"
 

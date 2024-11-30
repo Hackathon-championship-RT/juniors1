@@ -1,32 +1,33 @@
 {% extends 'base.html' %}
+{% load i18n %}
 
-{% block title %}Результаты{% endblock %}
+{% block title %}{% trans "Результаты" %}{% endblock %}
 
 {% block content %}
 
 <div class="container py-5">
-  <h2 class="text-center mb-5">Результаты игры</h2>
+  <h2 class="text-center mb-5">{% trans "Результаты игры" %}</h2>
   {% if user_results %}
     <div class="card mb-4 custom-card">
       <div class="card-header bg-dark text-white">
         <h3 class="card-title mb-0">
-          <i class="bi bi-card-list"></i> Ваши результаты
+          <i class="bi bi-card-list"></i> {% trans "Ваши результаты" %}
         </h3>
       </div>
     <div class="card-body">
       <table class="table custom-table">
         <thead>
           <tr>
-            <th>Время прохождения</th>
-            <th>Количество перемешиваний</th>
-            <th>Игра</th>
-            <th>Дата</th>
+            <th>{% trans "Время прохождения" %}</th>
+            <th>{% trans "Количество перемешиваний" %}</th>
+            <th>{% trans "Игра" %}</th>
+            <th>{% trans "Дата" %}</th>
         </tr>
         </thead>
           <tbody>
             {% for result in user_results %}
               <tr>
-                <td>{{ result.time }} секунд</td>
+                <td>{{ result.time }} {% trans "секунд" %}</td>
                 <td>{{ result.count_shuffled }}</td>
                 <td>{{ result.game.name }}</td>
                 <td>{{ result.created_at|date:"d.m.Y H:i" }}</td>
@@ -39,25 +40,25 @@
   {% else %}
     <div class="alert alert-warning text-center">
       {% if user.is_authenticated %}
-        <p>У вас нет сохраненных результатов. Играйте, чтобы они появились!</p>
+        <p>{% trans "У вас нет сохраненных результатов. Играйте, чтобы они появились!" %}</p>
       {% else %}
-        <p>Вы должны авторизоваться, чтобы видеть личные результаты.</p>
+        <p>{% trans "Вы должны авторизоваться, чтобы видеть личные результаты." %}</p>
       {% endif %}
     </div>
   {% endif %}
   <div class="card mt-5 custom-card">
     <div class="card-header bg-warning text-white">
       <h3 class="card-title mb-0">
-        <i class="bi bi-trophy-fill"></i> Таблица лидеров
+        <i class="bi bi-trophy-fill"></i> {% trans "Таблица лидеров" %}
       </h3>
     </div>
     <div class="card-body">
       <table class="table custom-table">
         <thead>
           <tr>
-            <th>Пользователь</th>
-            <th>Лучший результат</th>
-            <th>Последний результат</th>
+            <th>{% trans "Пользователь" %}</th>
+            <th>{% trans "Лучший результат" %}</th>
+            <th>{% trans "Последний результат" %}</th>
           </tr>
         </thead>
         <tbody>
@@ -66,17 +67,17 @@
               {% if entry.user %}
                 <td>{{ entry.user.username }}</td>
               {% else %}
-                <td>Неизвестный</td>
+                <td>{% trans "Неизвестный" %}</td>
               {% endif %}
               <td>
-                <span class="badge bg-info">{{ entry.best_time }} секунд</span>
-                <span class="badge bg-info">{{ entry.best_count_shuffled }} (кол.)</span>
+                <span class="badge bg-info">{{ entry.best_time }} {% trans "секунд" %}</span>
+                <span class="badge bg-info">{{ entry.best_count_shuffled }} ({% trans "кол." %})</span>
                 <span class="badge bg-info">{{ entry.game }}</span>
                 <span class="badge bg-info">{{ entry.best_result_date|date:"d.m.Y H:i" }}</span>
               </td>
               <td>
-                <span class="badge bg-secondary">{{ entry.last_time }} секунд</span>
-                <span class="badge bg-secondary">{{ entry.last_count_shuffled }} (кол.)</span>
+                <span class="badge bg-secondary">{{ entry.last_time }} {% trans "секунд" %}</span>
+                <span class="badge bg-secondary">{{ entry.last_count_shuffled }} ({% trans "кол." %})</span>
                 <span class="badge bg-secondary">{{ entry.game }}</span>
                 <span class="badge bg-secondary">{{ entry.last_result_date|date:"d.m.Y H:i" }}</span>
               </td>

@@ -3,11 +3,10 @@ import json
 import random
 
 import django.views.generic
-from django.contrib import messages
 from django.contrib.auth.models import User
 from django.db.models import Min, Max
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from game.models import GameResult, Game
 
 

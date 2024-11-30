@@ -1,9 +1,11 @@
+{% load i18n %}
 {% load static %}
+
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>{% block title %}Маджонг Авто{% endblock %}</title>
+  <title>{% block title %}{% trans "Маджонг Авто" %}{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
   <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-icons.css' %}">

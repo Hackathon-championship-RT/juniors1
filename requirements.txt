@@ -5,3 +5,4 @@ python-dotenv==1.0.0
 sorl-thumbnail==12.9.0
 pillow==11.0.0
 setuptools==75.6.0
+transliterate>=1.1.0
