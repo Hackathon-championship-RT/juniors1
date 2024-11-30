@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-30 20:17+0300\n"
+"POT-Creation-Date: 2024-11-30 21:02+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,6 +31,26 @@ msgstr "Русский"
 #: .\templates\base.html:8 .\templates\includes\header.html:7
 msgid "Маджонг Авто"
 msgstr "Маджонг Авто"
+
+#: .\templates\game\game.html:11
+msgid "Время:"
+msgstr "Время:"
+
+#: .\templates\game\game.html:13
+#, fuzzy
+#| msgid "Перемешать плитки"
+msgid "Осталось плиток:"
+msgstr "Перемешать плитки"
+
+#: .\templates\game\game.html:15
+#, fuzzy
+#| msgid "Перемешать плитки"
+msgid "Перемешать"
+msgstr "Перемешать плитки"
+
+#: .\templates\game\game.html:16
+msgid "Отмена хода"
+msgstr "Отмена хода"
 
 #: .\templates\game\games.html:4 .\templates\includes\header.html:11
 msgid "Уровни"
@@ -260,10 +280,43 @@ msgstr "Маджонг: автомобильные логотипы | Все п�
 msgid "Выйти"
 msgstr "Выйти"
 
-#: .\templates\includes\header.html:17
+#: .\templates\includes\header.html:17 .\templates\users\login.html:4
+#: .\templates\users\login.html:51 .\templates\users\signup.html:62
 msgid "Войти"
 msgstr "Войти"
 
 #: .\templates\includes\header.html:20
 msgid "Админ панель"
 msgstr "Админ панель"
+
+#: .\templates\includes\header.html:33
+msgid "Change"
+msgstr "Отмена"
+
+#: .\templates\users\login.html:13
+msgid "Вход в аккаунт"
+msgstr "Вход в аккаунт"
+
+#: .\templates\users\login.html:14
+msgid "Введите данные для авторизации"
+msgstr "Введите данные для авторизации"
+
+#: .\templates\users\login.html:57
+msgid "Нет аккаунта?"
+msgstr "Нет аккаунта?"
+
+#: .\templates\users\login.html:58 .\templates\users\signup.html:55
+msgid "Зарегистрироваться"
+msgstr "Зарегистрироваться"
+
+#: .\templates\users\signup.html:4 .\templates\users\signup.html:13
+msgid "Регистрация"
+msgstr "Регистрация"
+
+#: .\templates\users\signup.html:14
+msgid "Создайте новый аккаунт"
+msgstr "Создайте новый аккаунт"
+
+#: .\templates\users\signup.html:61
+msgid "Уже есть аккаунт?"
+msgstr "Уже есть аккаунт?"

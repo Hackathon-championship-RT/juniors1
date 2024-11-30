@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block title %}Игра{% endblock %}
 {% load static %}
@@ -7,12 +8,12 @@
 
 <div class="game-container">
   <div>
-    <h3 id="timer">Время: 0:00</h3>
+    <h3 id="timer">{% trans "Время:" %} 0:00</h3>
     <div id="remaining-cards">
-      <h3>Осталось плиток: <span id="cards-count"></span></h3>
+      <h3>{% trans "Осталось плиток:" %} <span id="cards-count"></span></h3>
     </div>
-    <button id="shuffle-button" class="btn btn-success btn-lg me-2">Перемешать</button>
-    <button id="undo-button" class="btn btn-danger btn-lg me-2">Отмена хода</button>
+    <button id="shuffle-button" class="btn btn-success btn-lg me-2">{% trans "Перемешать" %}</button>
+    <button id="undo-button" class="btn btn-danger btn-lg me-2">{% trans "Отмена хода" %}</button>
     <div id="message-container" class="message-container">
       Плитки соединены!
     </div>

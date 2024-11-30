@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-30 20:17+0300\n"
+"POT-Creation-Date: 2024-11-30 21:02+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,6 +30,26 @@ msgstr "Russian"
 msgid "Маджонг Авто"
 msgstr "Mahjong Auto"
 
+#: .\templates\game\game.html:11
+msgid "Время:"
+msgstr "Time:"
+
+#: .\templates\game\game.html:13
+#, fuzzy
+#| msgid "Перемешать плитки"
+msgid "Осталось плиток:"
+msgstr "Shuffle the tiles"
+
+#: .\templates\game\game.html:15
+#, fuzzy
+#| msgid "Перемешать плитки"
+msgid "Перемешать"
+msgstr "Shuffle the tiles"
+
+#: .\templates\game\game.html:16
+msgid "Отмена хода"
+msgstr "Undo move"
+
 #: .\templates\game\games.html:4 .\templates\includes\header.html:11
 msgid "Уровни"
 msgstr "Levels"
@@ -47,7 +67,6 @@ msgid "Средняя игра"
 msgstr "Medium"
 
 #: .\templates\game\games.html:27
-#, fuzzy
 msgid "Сложная игра"
 msgstr "Hard"
 
@@ -139,8 +158,16 @@ msgid "Основные правила:"
 msgstr "Main rules:"
 
 #: .\templates\game\rules.html:16
-msgid "В этой игре вам нужно находить одинаковые плитки и соединять их. Когда вы находите пару, плитки исчезают. При этом вы увидите краткую историю данного бренда. Вы должны сделать это как можно быстрее, используя минимальное количество перемешиваний!"
-msgstr "In this game you need to find identical tiles and connect them. When you find a pair, the tiles disappear. At the same time, you will see a short history of this brand. You must do this as quickly as possible, using a minimum number of shuffles!"
+msgid ""
+"В этой игре вам нужно находить одинаковые плитки и соединять их. Когда вы "
+"находите пару, плитки исчезают. При этом вы увидите краткую историю данного "
+"бренда. Вы должны сделать это как можно быстрее, используя минимальное "
+"количество перемешиваний!"
+msgstr ""
+"In this game you need to find identical tiles and connect them. When you "
+"find a pair, the tiles disappear. At the same time, you will see a short "
+"history of this brand. You must do this as quickly as possible, using a "
+"minimum number of shuffles!"
 
 #: .\templates\game\rules.html:18
 msgid "Нажимайте на плитки, чтобы выбрать их."
@@ -151,7 +178,8 @@ msgid "Используйте кнопку 'Перемешать', если вы
 msgstr "Use the 'Shuffle' button if you can't find a pair."
 
 #: .\templates\game\rules.html:20
-msgid "Если вам нужно вернуться к предыдущему ходу, используйте кнопку 'Отменить'."
+msgid ""
+"Если вам нужно вернуться к предыдущему ходу, используйте кнопку 'Отменить'."
 msgstr "If you need to go back to a previous move, use the 'Undo' button."
 
 #: .\templates\game\rules.html:22
@@ -167,18 +195,22 @@ msgid "Отменить действие"
 msgstr "Undo action"
 
 #: .\templates\game\rules.html:33
-#, fuzzy
-#| msgid "Правила игры"
 msgid "Цель игры:"
-msgstr "Rules of the game"
+msgstr "Objective of the game:"
 
 #: .\templates\game\rules.html:34
-msgid "Найдите все пары плиток за наименьшее количество времени и с минимальным числом перемешиваний!"
-msgstr "Find all pairs of tiles in the least amount of time and with the least number of shuffles!"
+msgid ""
+"Найдите все пары плиток за наименьшее количество времени и с минимальным "
+"числом перемешиваний!"
+msgstr ""
+"Find all pairs of tiles in the least amount of time and with the least "
+"number of shuffles!"
 
 #: .\templates\game\rules.html:36
-msgid "Обратите внимание: вы не сможете отменить действия после завершения игры."
-msgstr "Please note: You will not be able to undo your actions once the game is over."
+msgid ""
+"Обратите внимание: вы не сможете отменить действия после завершения игры."
+msgstr ""
+"Please note: You will not be able to undo your actions once the game is over."
 
 #: .\templates\homepage\main.html:5 .\templates\includes\header.html:10
 msgid "Главная"
@@ -241,10 +273,43 @@ msgstr "Mahjong: Car Logos | All Rights Reserved"
 msgid "Выйти"
 msgstr "Log out"
 
-#: .\templates\includes\header.html:17
+#: .\templates\includes\header.html:17 .\templates\users\login.html:4
+#: .\templates\users\login.html:51 .\templates\users\signup.html:62
 msgid "Войти"
 msgstr "Log in"
 
 #: .\templates\includes\header.html:20
 msgid "Админ панель"
 msgstr "Admin panel"
+
+#: .\templates\includes\header.html:33
+msgid "Change"
+msgstr "Change"
+
+#: .\templates\users\login.html:13
+msgid "Вход в аккаунт"
+msgstr "Login to your account"
+
+#: .\templates\users\login.html:14
+msgid "Введите данные для авторизации"
+msgstr "Please enter your login details"
+
+#: .\templates\users\login.html:57
+msgid "Нет аккаунта?"
+msgstr "Don't have an account?"
+
+#: .\templates\users\login.html:58 .\templates\users\signup.html:55
+msgid "Зарегистрироваться"
+msgstr "Register"
+
+#: .\templates\users\signup.html:4 .\templates\users\signup.html:13
+msgid "Регистрация"
+msgstr "Registration"
+
+#: .\templates\users\signup.html:14
+msgid "Создайте новый аккаунт"
+msgstr "Create a new account"
+
+#: .\templates\users\signup.html:61
+msgid "Уже есть аккаунт?"
+msgstr "Already have an account?"

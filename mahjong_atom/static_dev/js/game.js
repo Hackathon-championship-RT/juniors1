@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tile1.style.transform = 'scale(1)';
             tile2.style.transform = 'scale(1)';
 
-            lastMatchedTiles = null;  // Очищаем последний шаг
+            lastMatchedTiles = null;
             updateRemainingCards();
         }
     }
