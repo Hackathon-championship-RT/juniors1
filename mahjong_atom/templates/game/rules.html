@@ -1,14 +1,41 @@
-{% extends "base.html" %}
-
-{% block title %}Rules{% endblock %}
+{% extends 'base.html' %}
 
 {% block content %}
-  <section id="rules">
-    <h2>Game Rules</h2>
-    <ul>
-      <li>Match identical tiles to remove them from the board.</li>
-      <li>Tiles must be free (not blocked by other tiles) to be matched.</li>
-      <li>Clear the board to win!</li>
-    </ul>
-  </section>
+    <div class="container py-5">
+        <h2 class="text-center mb-4">Правила игры</h2>
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h3 class="card-title mb-0">Как играть?</h3>
+            </div>
+            <div class="card-body">
+                <h5 class="mb-3">Основные правила:</h5>
+                <p>В этой игре вам нужно находить одинаковые плитки и соединять их. Когда вы находите пару, плитки исчезают. При этом вы увидите краткую историю данного бренда. Вы должны сделать это как можно быстрее, используя минимальное количество перемешиваний!</p>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><i class="bi bi-check-circle text-success"></i> Нажимайте на плитки, чтобы выбрать их.</li>
+                    <li class="list-group-item"><i class="bi bi-check-circle text-success"></i> Используйте кнопку "Перемешать", если вы не можете найти пару.</li>
+                    <li class="list-group-item"><i class="bi bi-check-circle text-success"></i> Если вам нужно вернуться к предыдущему ходу, используйте кнопку "Отменить".</li>
+                </ul>
+
+                <h5 class="mt-4 mb-3">Управление:</h5>
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-arrow-clockwise me-2"></i>
+                        <span>Перемешать плитки</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-arrow-undo me-2"></i>
+                        <span>Отменить действие</span>
+                    </div>
+                </div>
+
+                <h5 class="mt-4 mb-3">Цель игры:</h5>
+                <p>Найдите все пары плиток за наименьшее количество времени и с минимальным числом перемешиваний!</p>
+
+                <div class="alert alert-warning mt-4">
+                    <i class="bi bi-exclamation-circle me-2"></i> Обратите внимание: вы не сможете отменить действия после завершения игры.
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

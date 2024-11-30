@@ -1,16 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Главная{% endblock %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mahjong Game</title>
-    <link rel="stylesheet" href="{% static '/css/styles.css' %}">
-</head>
-<body>
+
+{% block content %}
     <h1>Mahjong Game</h1>
-    <button id="shuffle-button">Перемешать</button>
-    <button id="undo-button">Undo Last Move</button>
+    <button id="shuffle-button" class="btn btn-success btn-lg me-2"> Перемешать</button>
+    <button id="undo-button" class="btn btn-danger btn-lg me-2">Отмена хода</button>
     <div id="message-container" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; background: rgba(0, 128, 0, 0.8); color: white; padding: 10px 20px; border-radius: 5px; display: none;">
         Плитки соединены!
     </div>
@@ -29,8 +25,7 @@
             </div>
         {% endfor %}
     </div>
-    <div id="remaining-cards">Remaining Cards: <span id="cards-count"></span></div>
-    <div id="timer">Time: 0:00</div> <!-- Таймер -->
+    <div id="remaining-cards"><h3>Осталось плиток: <span id="cards-count"></span></h3></div>
+    <h3 id="timer">Время: 0:00</h3>
     <script src="{% static 'js/game.js' %}"></script>
-</body>
-</html>
+{% endblock %}

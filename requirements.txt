@@ -3,3 +3,5 @@ django-active-link==0.1.8
 djangorestframework==3.14.0
 python-dotenv==1.0.0
 sorl-thumbnail==12.9.0
+pillow==11.0.0
+setuptools==75.6.0

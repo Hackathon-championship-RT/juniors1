@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return cookieValue;
     }
 
-    function showMessage(message, duration = 2000) {
+    function showMessage(message, duration = 7000) {
         const messageContainer = document.getElementById('message-container');
         messageContainer.textContent = message;
         messageContainer.style.display = 'block';
@@ -143,12 +143,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     function startTimer() {
-        startTime = new Date();
-        timerInterval = setInterval(() => {
+        const timerElement = document.getElementById('timer');
+        const startTime = new Date();
+        const timerInterval = setInterval(() => {
             const elapsedTime = Math.floor((new Date() - startTime) / 1000);
             const minutes = Math.floor(elapsedTime / 60);
             const seconds = elapsedTime % 60;
-            timerElement.textContent = `Time: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            timerElement.textContent = `Время: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
         }, 1000);
     }
 
@@ -243,8 +244,15 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(response => response.json())
             .then(data => {
-                window.location.href = '/';
-                stopTimer();
+                if (data.status === 'success') {
+                    window.location.href = '/game/leaderboard/';
+                } else {
+                    alert('Ошибка при сохранении результатов.');
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                alert('Произошла ошибка при сохранении результатов.');
             });
         }
     }

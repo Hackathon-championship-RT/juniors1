@@ -1,5 +1,6 @@
 import random
 
+
 def generate_tiles():
     tile_types = ['Bamboo', 'Character', 'Circle', 'Dragon']
     values = [str(i) for i in range(1, 10)] + ['Red', 'Green', 'White']
@@ -13,6 +14,7 @@ def generate_tiles():
 
     random.shuffle(tiles)
     return tiles
+
 
 def check_match(tile1, tile2):
     return tile1.value == tile2.value

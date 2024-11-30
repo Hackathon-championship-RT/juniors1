@@ -5,7 +5,6 @@ import django.utils.safestring
 import sorl.thumbnail
 
 
-
 class Tile(models.Model):
     name = models.CharField(
         verbose_name="название",

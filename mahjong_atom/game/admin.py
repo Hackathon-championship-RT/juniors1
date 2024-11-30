@@ -3,6 +3,7 @@ import django.core.exceptions
 
 import game.models
 
+
 @django.contrib.admin.register(game.models.Tile)
 class TileAdmin(django.contrib.admin.ModelAdmin):
     list_display = (

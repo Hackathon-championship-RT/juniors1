@@ -1,12 +1,14 @@
 import ast
-import random
 import json
+import random
 
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
 import django.views.generic
-
-from game.models import Tile, GameResult, Game
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django.db.models import Min, Max
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
+from game.models import GameResult, Game
 
 
 def generate_field(brands):
@@ -31,7 +33,7 @@ def generate_field(brands):
 
 
 class GameBoard(django.views.generic.ListView):
-    template_name='game/game.html'
+    template_name = 'game/game.html'
     context_object_name = "field"
 
     def get_queryset(self):
@@ -54,6 +56,7 @@ class GameBoard(django.views.generic.ListView):
         game = django.shortcuts.get_object_or_404(Game, pk=pk)
         context["game"] = game
         return context
+
 
 class Rules(django.views.generic.View):
     def get(self, request, *args, **kwargs):
@@ -86,6 +89,58 @@ class SaveResults(django.views.generic.View):
 
         return JsonResponse({'status': 'success'})
 
+
+def check_match(request):
+    return render(request, 'game/check_match.html')
+
+
+def leaderboard(request):
+    if request.user.is_authenticated:
+        # Получаем все результаты для текущего пользователя
+        user_results = GameResult.objects.filter(user=request.user).order_by(
+            '-created_at')
+
+        # Лидерборд: лучший и последний результат для каждого пользователя
+        leader_results = (
+            GameResult.objects
+            .values('user')
+            .annotate(
+                best_time=Min('time'),
+                best_count_shuffled=Min('count_shuffled'),
+                best_result_date=Max('created_at'),
+                last_time=Max('time'),
+                last_count_shuffled=Max('count_shuffled'),
+                last_result_date=Max('created_at'),
+            )
+            .order_by('best_time')
+        )
+
+        # Добавляем информацию о пользователе (username) и передаем в шаблон
+        leader_results = [
+            {
+                'user': User.objects.get(id=entry['user']),
+                'best_time': entry['best_time'],
+                'best_count_shuffled': entry['best_count_shuffled'],
+                'best_result_date': entry['best_result_date'],
+                'last_time': entry['last_time'],
+                'last_count_shuffled': entry['last_count_shuffled'],
+                'last_result_date': entry['last_result_date'],
+            }
+            for entry in leader_results
+        ]
+
+        return render(request, 'game/results.html', {
+            'user_results': user_results,
+            'leader_results': leader_results
+        })
+    else:
+        messages.error(
+            request,
+            "Вы должны авторизоваться, чтобы видеть результаты."
+        )
+        return redirect('homepage:main')
+
+
 class ShuffleTiles(django.views.generic.View):
     def post(self, request):
         data = json.loads(request.body)
@@ -97,11 +152,14 @@ class ShuffleTiles(django.views.generic.View):
             if shuffle_tile["value"] == "undefined":
                 continue
             if "[" not in shuffle_tile["value"]:
-                name, img, description = shuffle_tile["value"].split(",")
+                name, img = shuffle_tile["value"].split(",")[:2]
+                description = ','.join(shuffle_tile["value"].split(",")[2:])
             else:
-                name, img, description = ast.literal_eval(shuffle_tile["value"])
+                name, img, description = ast.literal_eval(
+                    shuffle_tile["value"])
             shuffled_set.add((name, img, description))
-        shuffled_tiles = [list(shuffled_tile) for shuffled_tile in shuffled_set]
+        shuffled_tiles = [list(shuffled_tile) for shuffled_tile in
+                          shuffled_set]
         shuffled_tiles = generate_field(shuffled_tiles)
 
         return JsonResponse({
@@ -109,7 +167,8 @@ class ShuffleTiles(django.views.generic.View):
             'shuffled_tiles': shuffled_tiles
         })
 
+
 class Games(django.views.generic.ListView):
-    template_name='game/games.html'
+    template_name = 'game/games.html'
     context_object_name = "games"
     queryset = Game.objects.all()
