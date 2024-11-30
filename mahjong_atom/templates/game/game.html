@@ -4,35 +4,35 @@
 {% load static %}
 
 {% block content %}
+
 <div class="game-container">
-    <div class="info-container">
-        <h3 id="timer">Время: 0:00</h3>
-        <div id="remaining-cards">
-            <h3>Осталось плиток: <span id="cards-count"></span></h3>
-        </div>
-        <button id="shuffle-button" class="btn btn-success btn-lg me-2">Перемешать</button>
-        <button id="undo-button" class="btn btn-danger btn-lg me-2">Отмена хода</button>
-        <div id="message-container" class="message-container">
-            Плитки соединены!
-        </div>
+  <div>
+    <h3 id="timer">Время: 0:00</h3>
+    <div id="remaining-cards">
+      <h3>Осталось плиток: <span id="cards-count"></span></h3>
     </div>
-
-    <div id="game-board" data-game-pk="{{ game.pk }}" data-game-lvl="{{ lvl }}" class="lvl-{{ lvl }}">
-        {% for layer in field %}
-            <div class="layer">
-                {% for tile in layer %}
-                    {% if tile == "" %}
-                        <div class="tile_pass"></div>
-                    {% else %}
-                        <div class="tile" data-value="{{ tile }}" data-model-name="{{ tile.2 }}">
-                            <img src="{{ tile.1 }}" alt="{{ tile.0 }}" width="80px" height="60px">
-                        </div>
-                    {% endif %}
-                {% endfor %}
+    <button id="shuffle-button" class="btn btn-success btn-lg me-2">Перемешать</button>
+    <button id="undo-button" class="btn btn-danger btn-lg me-2">Отмена хода</button>
+    <div id="message-container" class="message-container">
+      Плитки соединены!
+    </div>
+  </div>
+  <div id="game-board" data-game-pk="{{ game.pk }}" data-game-lvl="{{ lvl }}" class="lvl-{{ lvl }}">
+    {% for layer in field %}
+      <div class="layer">
+        {% for tile in layer %}
+          {% if tile == "" %}
+            <div class="tile_pass"></div>
+          {% else %}
+            <div class="tile" data-value="{{ tile }}" data-model-name="{{ tile.2 }}">
+              <img src="{{ tile.1 }}" alt="{{ tile.0 }}" width="80px" height="60px">
             </div>
+          {% endif %}
         {% endfor %}
-    </div>
+      </div>
+    {% endfor %}
+  </div>
 </div>
-
 <script src="{% static 'js/game.js' %}"></script>
+
 {% endblock %}

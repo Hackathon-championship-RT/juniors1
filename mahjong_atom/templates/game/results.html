@@ -1,77 +1,83 @@
 {% extends 'base.html' %}
 
+{% block title %}Результаты{% endblock %}
+
 {% block content %}
-    <div class="container py-5">
-        <h2 class="text-center mb-5">Результаты игры</h2>
 
-        {% if user_results %}
-            <div class="card mb-4 custom-card">
-                <div class="card-header bg-dark text-white">
-                    <h3 class="card-title mb-0">
-                        <i class="bi bi-card-list"></i> Ваши результаты
-                    </h3>
-                </div>
-                <div class="card-body">
-                    <table class="table custom-table">
-                        <thead>
-                            <tr>
-                                <th>Время прохождения</th>
-                                <th>Количество перемешиваний</th>
-                                <th>Дата</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for result in user_results %}
-                                <tr>
-                                    <td>{{ result.time }} секунд</td>
-                                    <td>{{ result.count_shuffled }}</td>
-                                    <td>{{ result.created_at|date:"d.m.Y H:i" }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        {% else %}
-            <div class="alert alert-warning text-center">
-                <p>У вас нет сохраненных результатов. Играйте, чтобы они появились!</p>
-            </div>
-        {% endif %}
-
-        <div class="card mt-5 custom-card">
-            <div class="card-header bg-warning text-white">
-                <h3 class="card-title mb-0">
-                    <i class="bi bi-trophy-fill"></i> Таблица лидеров
-                </h3>
-            </div>
-            <div class="card-body">
-                <table class="table custom-table">
-                    <thead>
-                        <tr>
-                            <th>Пользователь</th>
-                            <th>Лучший результат</th>
-                            <th>Последний результат</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for entry in leader_results %}
-                            <tr>
-                                <td>{{ entry.user.username }}</td>
-                                <td>
-                                    <span class="badge bg-info">{{ entry.best_time }} секунд</span>
-                                    <span class="badge bg-info">{{ entry.best_count_shuffled }} (кол.)</span>
-                                    <span class="badge bg-info">{{ entry.best_result_date|date:"d.m.Y H:i" }}</span>
-                                </td>
-                                <td>
-                                    <span class="badge bg-secondary">{{ entry.last_time }} секунд</span>
-                                    <span class="badge bg-secondary">{{ entry.last_count_shuffled }} (кол.)</span>
-                                    <span class="badge bg-secondary">{{ entry.last_result_date|date:"d.m.Y H:i" }}</span>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<div class="container py-5">
+  <h2 class="text-center mb-5">Результаты игры</h2>
+  {% if user_results %}
+    <div class="card mb-4 custom-card">
+      <div class="card-header bg-dark text-white">
+        <h3 class="card-title mb-0">
+          <i class="bi bi-card-list"></i> Ваши результаты
+        </h3>
+      </div>
+    <div class="card-body">
+      <table class="table custom-table">
+        <thead>
+          <tr>
+            <th>Время прохождения</th>
+            <th>Количество перемешиваний</th>
+            <th>Игра</th>
+            <th>Дата</th>
+        </tr>
+        </thead>
+          <tbody>
+            {% for result in user_results %}
+              <tr>
+                <td>{{ result.time }} секунд</td>
+                <td>{{ result.count_shuffled }}</td>
+                <td>{{ result.game.name }}</td>
+                <td>{{ result.created_at|date:"d.m.Y H:i" }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
+  {% else %}
+    <div class="alert alert-warning text-center">
+      <p>У вас нет сохраненных результатов. Играйте, чтобы они появились!</p>
+    </div>
+  {% endif %}
+  <div class="card mt-5 custom-card">
+    <div class="card-header bg-warning text-white">
+      <h3 class="card-title mb-0">
+        <i class="bi bi-trophy-fill"></i> Таблица лидеров
+      </h3>
+    </div>
+    <div class="card-body">
+      <table class="table custom-table">
+        <thead>
+          <tr>
+            <th>Пользователь</th>
+            <th>Лучший результат</th>
+            <th>Последний результат</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entry in leader_results %}
+            <tr>
+              <td>{{ entry.user.username }}</td>
+              <td>
+                <span class="badge bg-info">{{ entry.best_time }} секунд</span>
+                <span class="badge bg-info">{{ entry.best_count_shuffled }} (кол.)</span>
+                <span class="badge bg-info">{{ entry.game }}</span>
+                <span class="badge bg-info">{{ entry.best_result_date|date:"d.m.Y H:i" }}</span>
+              </td>
+              <td>
+                <span class="badge bg-secondary">{{ entry.last_time }} секунд</span>
+                <span class="badge bg-secondary">{{ entry.last_count_shuffled }} (кол.)</span>
+                <span class="badge bg-secondary">{{ entry.game }}</span>
+                <span class="badge bg-secondary">{{ entry.last_result_date|date:"d.m.Y H:i" }}</span>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 {% endblock %}

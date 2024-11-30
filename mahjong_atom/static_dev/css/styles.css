@@ -22,9 +22,10 @@ footer {
 #game-board {
     display: flex;
     flex-wrap: wrap;
+    margin-right: 200px;
     justify-content: center; /* Центрируем плитки */
     gap: 10px; /* Добавляем промежутки между плитками */
-    width: 100%; /* Задаем ширину 100% */
+    width: 40%; /* Задаем ширину 100% */
     position: relative;
 }
 
@@ -76,7 +77,7 @@ footer {
     flex: 2;
     display: flex;
     flex-wrap: wrap;
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
     position: relative;
 }
@@ -252,13 +253,13 @@ button:hover {
 
 .lvl-1 .tile,
 .lvl-1 .tile_pass {
-    width: 100px;
-    height: 100px;
+    width: 150px;
+    height: 150px;
 }
 
 .lvl-1 .tile img {
-    width: 90px;
-    height: 90px;
+    width: 135px;
+    height: 135px;
 }
 
 /* Размеры для уровня сложности 2 (средний) */

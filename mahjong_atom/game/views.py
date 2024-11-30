@@ -104,47 +104,45 @@ class SaveResults(django.views.generic.View):
 def check_match(request):
     return render(request, 'game/check_match.html')
 
+class Leaderboard(django.views.generic.View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            user_results = GameResult.objects.filter(user=request.user).order_by(
+                '-created_at')
 
-def leaderboard(request):
-    if request.user.is_authenticated:
-        # Получаем все результаты для текущего пользователя
-        user_results = GameResult.objects.filter(user=request.user).order_by(
-            '-created_at')
-
-        # Лидерборд: лучший и последний результат для каждого пользователя
-        leader_results = (
-            GameResult.objects
-            .values('user')
-            .annotate(
-                best_time=Min('time'),
-                best_count_shuffled=Min('count_shuffled'),
-                best_result_date=Max('created_at'),
-                last_time=Max('time'),
-                last_count_shuffled=Max('count_shuffled'),
-                last_result_date=Max('created_at'),
+            leader_results = (
+                GameResult.objects
+                .values('user', "game__name")
+                .annotate(
+                    best_time=Min('time'),
+                    best_count_shuffled=Min('count_shuffled'),
+                    best_result_date=Max('created_at'),
+                    last_time=Max('time'),
+                    last_count_shuffled=Max('count_shuffled'),
+                    last_result_date=Max('created_at'),
+                )
+                .order_by('best_time')
             )
-            .order_by('best_time')
-        )
 
-        # Добавляем информацию о пользователе (username) и передаем в шаблон
-        leader_results = [
-            {
-                'user': User.objects.get(id=entry['user']),
-                'best_time': entry['best_time'],
-                'best_count_shuffled': entry['best_count_shuffled'],
-                'best_result_date': entry['best_result_date'],
-                'last_time': entry['last_time'],
-                'last_count_shuffled': entry['last_count_shuffled'],
-                'last_result_date': entry['last_result_date'],
-            }
-            for entry in leader_results
-        ]
+            leader_results = [
+                {
+                    'user': User.objects.get(id=entry['user']),
+                    'game': entry["game__name"],
+                    'best_time': entry['best_time'],
+                    'best_count_shuffled': entry['best_count_shuffled'],
+                    'best_result_date': entry['best_result_date'],
+                    'last_time': entry['last_time'],
+                    'last_count_shuffled': entry['last_count_shuffled'],
+                    'last_result_date': entry['last_result_date'],
+                }
+                for entry in leader_results
+            ]
 
-        return render(request, 'game/results.html', {
-            'user_results': user_results,
-            'leader_results': leader_results
-        })
-    else:
+            return render(request, 'game/results.html', {
+                'user_results': user_results,
+                'leader_results': leader_results
+            })
+
         messages.error(
             request,
             "Вы должны авторизоваться, чтобы видеть результаты."

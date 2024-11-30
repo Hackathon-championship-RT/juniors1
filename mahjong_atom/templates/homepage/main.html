@@ -4,14 +4,15 @@
 {% load static %}
 
 {% block content %}
+
 {% if messages %}
-<div class="container mt-3">
-  {% for message in messages %}
-  <div class="alert alert-{{ message.tags }}" role="alert">
-    {{ message }}
+  <div class="container mt-3">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}" role="alert">
+        {{ message }}
+      </div>
+    {% endfor %}
   </div>
-  {% endfor %}
-</div>
 {% endif %}
 <div class="text-center">
   <h1 class="display-4 text-dark">Добро пожаловать в Маджонг Авто!</h1>
@@ -55,4 +56,5 @@
     </div>
   </div>
 </div>
+
 {% endblock %}
