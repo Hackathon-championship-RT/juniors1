@@ -4,28 +4,7 @@ from django.db.models import ForeignKey
 import django.utils.safestring
 import sorl.thumbnail
 
-class GameResult(models.Model):
-    user = ForeignKey(
-        django.contrib.auth.get_user_model(),
-        on_delete=django.db.models.CASCADE,
-        null=True,
-        blank=True,
-        verbose_name="пользователь",
-    )
-    time = models.IntegerField(
-        verbose_name="время",
-    )
-    created_at = models.DateTimeField(
-        verbose_name="дата создания",
-        auto_now_add=True,
-    )
-    count_shuffled = models.IntegerField(
-        verbose_name="количество перешивание",
-    )
 
-    class Meta:
-        verbose_name = "результат"
-        verbose_name_plural = "результаты"
 
 class Tile(models.Model):
     name = models.CharField(
@@ -73,6 +52,61 @@ class Tile(models.Model):
     image_tmb.short_description = "превью"
     image_tmb.allow_tags = True
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name = "плитка"
         verbose_name_plural = "плитки"
+
+
+class Game(models.Model):
+    name = models.CharField(
+        verbose_name="название",
+        max_length=100,
+    )
+    tiles = django.db.models.ManyToManyField(
+        Tile,
+        verbose_name="плитки",
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "игра"
+        verbose_name_plural = "игры"
+
+
+class GameResult(models.Model):
+    user = ForeignKey(
+        django.contrib.auth.get_user_model(),
+        on_delete=django.db.models.CASCADE,
+        verbose_name="пользователь",
+        null=True,
+        blank=True,
+    )
+    time = models.IntegerField(
+        verbose_name="время",
+    )
+    created_at = models.DateTimeField(
+        verbose_name="дата создания",
+        auto_now_add=True,
+    )
+    count_shuffled = models.IntegerField(
+        verbose_name="количество перешивание",
+    )
+    game = models.ForeignKey(
+        Game,
+        on_delete=django.db.models.CASCADE,
+        verbose_name="игра",
+        null=True,
+        blank=True,
+    )
+
+    def __str__(self):
+        return self.user.name
+
+    class Meta:
+        verbose_name = "результат"
+        verbose_name_plural = "результаты"

@@ -4,23 +4,19 @@ import json
 
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
+import django.views.generic
 
-from game.models import Tile, GameResult
+from game.models import Tile, GameResult, Game
 
 
-# Конфигурация игрового поля (слои)
 def generate_field(brands):
     layers = 10
-    tiles_per_layer = 12  # Количество плиток на слой (уменьшите/увеличьте для сложности)
+    tiles_per_layer = 12
     total_tiles = layers * tiles_per_layer
 
-    # Логотипы автомобильных брендов (можно заменить на реальные пути к изображениям)
-
-    # Создаем пары логотипов
     values = brands[:total_tiles // 2] * 2
     random.shuffle(values)
 
-    # Разбиваем на слои
     field = []
     for layer in range(layers):
         layer_tiles = values[
@@ -34,36 +30,44 @@ def generate_field(brands):
     return field
 
 
-# Отображение главной страницы
-def game_board(request):
-    tiles = Tile.objects.all()
-    brands = []
-    for tile in tiles:
-        if tile.image:
-            brands.append([tile.name, tile.image.url, tile.description])
-        else:
-            brands.append([tile.name, "", tile.description])
+class GameBoard(django.views.generic.ListView):
+    template_name='game/game.html'
+    context_object_name = "field"
 
-    field = generate_field(brands)
-    return render(request, 'game/game.html', {'field': field})
+    def get_queryset(self):
+        pk = self.kwargs.get('pk')
+        game = django.shortcuts.get_object_or_404(Game, pk=pk)
+        tiles = game.tiles.all()
+        brands = []
+        for tile in tiles:
+            if tile.image:
+                brands.append([tile.name, tile.image.url, tile.description])
+            else:
+                brands.append([tile.name, "", tile.description])
+
+        field = generate_field(brands)
+        return field
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = self.kwargs.get('pk')
+        game = django.shortcuts.get_object_or_404(Game, pk=pk)
+        context["game"] = game
+        return context
+
+class Rules(django.views.generic.View):
+    def get(self, request, *args, **kwargs):
+        return django.shortcuts.render(request, "game/rules.html")
 
 
-# Логика проверки доступности пары плиток
-def check_match(request):
-    if request.method == 'POST':
-        tile1 = request.POST.get('tile1')
-        tile2 = request.POST.get('tile2')
-        if tile1 == tile2:
-            return JsonResponse({'match': True})
-        return JsonResponse({'match': False})
-    return JsonResponse({'error': 'Invalid request'})
-
-
-def save_results(request):
-    if request.method == 'POST':
+class SaveResults(django.views.generic.View):
+    def post(self, request):
         data = json.loads(request.body)
         time_in_seconds = data.get('time')  # Получаем время в секундах
         count_shuffled = data.get("count_shuffled")
+
+        game_pk = data.get("game_pk")
+        game = django.shortcuts.get_object_or_404(Game, pk=game_pk)
 
         user = request.user
         if user.is_authenticated:
@@ -71,18 +75,19 @@ def save_results(request):
                 user=user,
                 time=time_in_seconds,
                 count_shuffled=count_shuffled,
+                game=game,
             )
         else:
             GameResult.objects.create(
                 time=time_in_seconds,
                 count_shuffled=count_shuffled,
+                game=game,
             )
 
         return JsonResponse({'status': 'success'})
 
-
-def shuffle_tiles(request):
-    if request.method == 'POST':
+class ShuffleTiles(django.views.generic.View):
+    def post(self, request):
         data = json.loads(request.body)
         tiles = data.get('tiles', [])
 
@@ -103,4 +108,8 @@ def shuffle_tiles(request):
             'status': 'success',
             'shuffled_tiles': shuffled_tiles
         })
-    return JsonResponse({'status': 'error', 'message': 'Неверный метод запроса'})
+
+class Games(django.views.generic.ListView):
+    template_name='game/games.html'
+    context_object_name = "games"
+    queryset = Game.objects.all()

@@ -5,13 +5,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const cardsCountElement = document.getElementById('cards-count');
     const timerElement = document.getElementById('timer');
     const undoButton = document.getElementById('undo-button');
+    const gamePk = document.getElementById('game-board').getAttribute('data-game-pk');
     let selectedTiles = [];
     let startTime = null;
     let timerInterval = null;
     let count_shuffled = 0;
-    const gameStates = []; // Хранилище состояний игры
+    const gameStates = [];
 
-    // Функция для создания копии текущего игрового состояния
     function saveGameState() {
         const currentState = Array.from(document.querySelectorAll('.tile')).map(tile => ({
             id: tile.dataset.id,
@@ -22,12 +22,10 @@ document.addEventListener('DOMContentLoaded', () => {
         gameStates.push(currentState);
     }
 
-    // Функция для восстановления последнего состояния
     function restoreLastState() {
         if (gameStates.length > 0) {
-            const lastState = gameStates.pop(); // Достаем последнее сохраненное состояние
+            const lastState = gameStates.pop();
 
-            // Получаем все плитки
             const tiles = Array.from(document.querySelectorAll('.tile'));
 
             tiles.forEach((tile, index) => {
@@ -36,9 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 tile.className = 'tile';
 
                 if (state.isMatched) {
-                    tile.classList.add('matched'); // Плитка совпала
+                    tile.classList.add('matched');
                 } else if (state.isSelected) {
-                    // Убираем selected при возврате
                     tile.classList.remove('selected');
                 }
 
@@ -47,19 +44,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // Очищаем массив выбранных плиток
             selectedTiles = [];
         }
     }
 
-    // Функция обновления количества оставшихся карточек
     function updateRemainingCards() {
         const visibleTiles = Array.from(document.querySelectorAll('.tile:not(.matched)'));
-        cardsCountElement.textContent = visibleTiles.length; // Обновляем текст с количеством
+        cardsCountElement.textContent = visibleTiles.length;
     }
 
     updateRemainingCards();
-    // Получение CSRF-токена
+
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -82,33 +77,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
         setTimeout(() => {
             messageContainer.style.display = 'none';
-        }, duration); // Сообщение исчезнет через `duration` миллисекунд
+        }, duration);
     }
 
 
     function updateBoard(shuffledTiles) {
-        gameBoard.innerHTML = ''; // Очищаем игровое поле
+        gameBoard.innerHTML = '';
 
         shuffledTiles.forEach(layer => {
             const layerDiv = document.createElement('div');
-            layerDiv.classList.add('layer'); // Создаем div для слоя
+            layerDiv.classList.add('layer');
 
             layer.forEach(tile => {
                 if (tile === "") {
-                    // Пустая плитка
                     const emptyTileDiv = document.createElement('div');
                     emptyTileDiv.classList.add('tile_pass');
                     layerDiv.appendChild(emptyTileDiv);
                 } else {
-                    // Плитка с данными
                     const tileDiv = document.createElement('div');
                     tileDiv.classList.add('tile');
                     tileDiv.dataset.value = tile;
+                    tileDiv.dataset.modelName = tile[2];
                     const tileImg = document.createElement('img');
-                    tileImg.src = tile[1]; // URL изображения
-                    tileImg.alt = tile[0]; // Название плитки
-                    tileImg.width = 80; // Ширина изображения
-                    tileImg.height = 60; // Высота изображения
+                    tileImg.src = tile[1];
+                    tileImg.alt = tile[0];
+                    tileImg.width = 80;
+                    tileImg.height = 60;
 
                     tileDiv.appendChild(tileImg);
                     layerDiv.appendChild(tileDiv);
@@ -120,20 +114,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     shuffleButton.addEventListener('click', () => {
-        // Получаем текущие плитки с поля
         const tiles = Array.from(document.querySelectorAll('.tile'))
         .filter(tile => tile.style.visibility !== 'hidden' && tile.style.display !== 'none' && !tile.classList.contains('matched'))
         .map(tile => ({
-            id: tile.dataset.id, // Уникальный идентификатор плитки
-            value: tile.dataset.value // Значение плитки
+            id: tile.dataset.id,
+            value: tile.dataset.value
         }));
 
         count_shuffled++;
-        // Отправляем запрос на сервер для перемешивания
         fetch('/game/shuffle_tiles/', {
             method: 'POST',
             headers: {
-                'X-CSRFToken': getCookie('csrftoken'), // Получение CSRF-токена
+                'X-CSRFToken': getCookie('csrftoken'),
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ tiles })
@@ -141,7 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                // Обновляем игровое поле с перемешанными плитками
                 updateBoard(data.shuffled_tiles);
             } else {
                 console.error('Ошибка перемешивания:', data.message);
@@ -151,23 +142,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // Функция запуска таймера
     function startTimer() {
-        startTime = new Date(); // Запоминаем время начала игры
+        startTime = new Date();
         timerInterval = setInterval(() => {
-            const elapsedTime = Math.floor((new Date() - startTime) / 1000); // Прошедшее время в секундах
+            const elapsedTime = Math.floor((new Date() - startTime) / 1000);
             const minutes = Math.floor(elapsedTime / 60);
             const seconds = elapsedTime % 60;
             timerElement.textContent = `Time: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
         }, 1000);
     }
 
-    // Остановка таймера
     function stopTimer() {
         clearInterval(timerInterval);
     }
 
-    // Обработчик кликов по плиткам
     gameBoard.addEventListener('click', event => {
         const tile = event.target.closest('.tile');
         if (!tile || tile.classList.contains('matched') || tile.classList.contains('selected')) {
@@ -186,9 +174,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    startTimer(); // Стартуем таймер
+    startTimer();
 
-    // Проверка совпадений
     function checkMatch(tile1, tile2) {
         saveGameState();
         if (tile1.dataset.value === tile2.dataset.value) {
@@ -206,9 +193,8 @@ document.addEventListener('DOMContentLoaded', () => {
         selectedTiles = [];
     }
 
-    // Перемешивание плиток
     shuffleButton.addEventListener('click', () => {
-        const field = generateField(); // Генерируем случайное поле
+        const field = generateField();
         updateBoard(field);
         saveGameState();
     });
@@ -232,19 +218,17 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(response => response.json())
         .then(data => {
             alert('Results saved!');
-            stopTimer(); // Остановка таймера при сохранении
+            stopTimer();
         });
     });
 
     function checkGameEnd() {
-        // Проверяем, остались ли плитки без класса 'matched'
         const unmatchedTiles = document.querySelectorAll('.tile:not(.matched)');
         if (unmatchedTiles.length === 0) {
-            stopTimer(); // Останавливаем таймер
+            stopTimer();
 
-            const elapsedTime = Math.floor((new Date() - startTime) / 1000);  // Получаем время в секундах
+            const elapsedTime = Math.floor((new Date() - startTime) / 1000);
 
-            // Отправляем только время (в секундах)
             fetch('/game/save_results/', {
                 method: 'POST',
                 headers: {
@@ -254,16 +238,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({
                     time: elapsedTime,
                     count_shuffled: count_shuffled,
+                    game_pk: gamePk
                 })
             })
             .then(response => response.json())
             .then(data => {
                 window.location.href = '/';
-                stopTimer(); // Остановка таймера при сохранении
+                stopTimer();
             });
         }
     }
-    // Запускаем игру
     const initialField = generateField();
     updateBoard(initialField);
 });

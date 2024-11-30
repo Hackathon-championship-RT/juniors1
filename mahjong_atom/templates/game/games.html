@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Игры{% endblock %}
+
+{% block content %}
+  <section>
+    <h2>Игры</h2>
+    {% for game in games %}
+      <div>
+        <h4>{{ game.name }}</h4>
+        <a href="{% url 'game:game_board' pk=game.id %}" class="btn btn-primary">Начать</a>
+      </div>
+    {% endfor %}
+  </section>
+{% endblock %}

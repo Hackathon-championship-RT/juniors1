@@ -7,8 +7,8 @@
     </a>
     <nav class="nav nav-pills">
       <a href="{% url 'homepage:main' %}" class="nav-link {% if view_name == 'homepage:main' %}active{% endif %}">Главная</a>
-      <a href="{% url 'game:game_board' %}" class="nav-link {% if view_name == 'game:game_board' %}active{% endif %}">Игра</a>
-      <a href="{% url 'game:check_match' %}" class="nav-link {% if view_name == 'game:check_match' %}active{% endif %}">Правила</a>
+      <a href="{% url 'game:games' %}" class="nav-link {% if view_name == 'game:games' %}active{% endif %}">Игры</a>
+      <a href="{% url 'game:rules' %}" class="nav-link {% if view_name == 'game:rules' %}active{% endif %}">Правила</a>
       {% if user.is_authenticated %}
         <a href="{% url 'users:logout' %}" class="nav-link">Выйти</a>
       {% else %}
